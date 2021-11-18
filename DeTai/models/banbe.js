@@ -29,6 +29,14 @@ module.exports={
            return null;
        }
        return row;
-    }
+    },
+    dembanbe:async function(matk){
+        const row= await db.load(` SELECT banbe.id_tk, count(id_banbe) as sobanbe  FROM ${table} where id_tk='${matk}' group by id_tk;
+        `);
+        if(row.length===0){
+            return null;
+        }
+        return row;
+     }
 
 };

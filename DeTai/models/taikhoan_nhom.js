@@ -57,5 +57,13 @@ module.exports={
             return null;
         }
         return row;
-     }
+     },
+     demsonhom:async function(idtk){
+        const row= await db.load(`SELECT* FROM ${table} where id_tk=${idtk} group by id_nhom;
+        `);
+        if(row.length===0){
+            return null;
+        }
+        return row;
+     },
 };

@@ -1,11 +1,4 @@
 
-//hopchat
-const hopthu = document.querySelector('#kt_chat_contacts_body');
-const hopchat = document.querySelector('#kt_chat_messenger');
-hopthu.addEventListener('click', ()=>{
-    //  e.preventDefault();
- //   hopchat.style.display = 'block'; 
-})
 //timkiemban
 $(function(){
     const buttun = document.querySelector('#themban');
@@ -248,7 +241,7 @@ $(function(){
                         div2.append(div5);
                         hienthi_khungchat.appendChild(div11);
                         div1.remove();
-
+                        location.reload();
                     }
                     
                 })  
@@ -1074,6 +1067,7 @@ $(function(){
                                 </div>`;
                                     form_chat_group.appendChild(div);
                                     ten_group.value="";   
+                                    location.reload();
                                      
                              }
                         }) 
@@ -1087,35 +1081,32 @@ $(function(){
                         //     tengroup.textContent=ten_group;
 
                         // }
-                        const div_chatgroup = document.createElement('div');
-                        div_chatgroup.className='hover scroll-y me-n5 pe-5 h-200px h-lg-auto';
-                        div_chatgroup.style='max-height: 416px;';
-                       // div_chatgroup.addEventListener('click', chatgroup)
-                        div_chatgroup.innerHTML=`<div class="d-flex flex-stack py-4">
-                        <!--begin::Details-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Avatar-->
-                            <div class="symbol symbol-45px symbol-circle">
-                                <img src="/sign-in/svg/anhmacdinh.jpg">
-                            </div>
-                            <!--end::Avatar-->
-                            <!--begin::Details-->
-                            <div class="ms-5">
-                                <a id="tennhomchat" href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">${ten_group}</a>
-                            </div>
-                            <!--end::Details-->
-                        </div>
-                        <!--end::Details-->
-                        <!--begin::Lat seen-->
-                        <div class="d-flex flex-column align-items-end ms-2">
-                            <span class="text-muted fs-7 mb-1">3 hrs</span>
-                        </div>
-                        <!--end::Lat seen-->
-                    </div>`;
-                        add_groupchat.appendChild(div_chatgroup);
-    
-                  
-                  
+                    //     const div_chatgroup = document.createElement('div');
+                    //     div_chatgroup.className='hover scroll-y me-n5 pe-5 h-200px h-lg-auto';
+                    //     div_chatgroup.style='max-height: 416px;';
+                    //    // div_chatgroup.addEventListener('click', chatgroup)
+                    //     div_chatgroup.innerHTML=`<div class="d-flex flex-stack py-4">
+                    //     <!--begin::Details-->
+                    //     <div class="d-flex align-items-center">
+                    //         <!--begin::Avatar-->
+                    //         <div class="symbol symbol-45px symbol-circle">
+                    //             <img src="/sign-in/svg/anhmacdinh.jpg">
+                    //         </div>
+                    //         <!--end::Avatar-->
+                    //         <!--begin::Details-->
+                    //         <div class="ms-5">
+                    //             <a id="tennhomchat" href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">${ten_group}</a>
+                    //         </div>
+                    //         <!--end::Details-->
+                    //     </div>
+                    //     <!--end::Details-->
+                    //     <!--begin::Lat seen-->
+                    //     <div class="d-flex flex-column align-items-end ms-2">
+                    //         <span class="text-muted fs-7 mb-1">3 hrs</span>
+                    //     </div>
+                    //     <!--end::Lat seen-->
+                    // </div>`;
+                    //     add_groupchat.appendChild(div_chatgroup);         
                 }
                 
                

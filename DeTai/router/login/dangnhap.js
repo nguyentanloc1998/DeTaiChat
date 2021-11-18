@@ -28,10 +28,30 @@ router.get('/dangky',async (req,res)=>{
     res.render('dangky');
 });
 router.get('/thongtin',async(req,res)=>{
-    res.render('thongtin-user');
+    const soban = await table_banbe.dembanbe(req.session.AuthUser.ma_tk);
+    const sonhom = await table_tk_nhom.demsonhom(req.session.AuthUser.ma_tk);
+    let a=0;
+    for(let i= 0;i<sonhom.length;i++){
+        a++
+    }
+    console.log(a);
+    console.log(soban);
+    const data={soban:soban,sonhom:a};
+    console.log(data);
+    res.render('thongtin-user',{data:data});
 });
 router.get('/suathongtin',async(req,res)=>{
-    res.render('suathongtin');
+    const soban = await table_banbe.dembanbe(req.session.AuthUser.ma_tk);
+    const sonhom = await table_tk_nhom.demsonhom(req.session.AuthUser.ma_tk);
+    let a=0;
+    for(let i= 0;i<sonhom.length;i++){
+        a++
+    }
+    console.log(a);
+    console.log(soban);
+    const data={soban:soban,sonhom:a};
+    console.log(data);
+    res.render('suathongtin',{data:data});
 });
 router.post('/dangky',async (req,res)=>{
     const pass_hash = bcrypt.hashSync(req.body.matkhau,configg.authentication.saltRounds);

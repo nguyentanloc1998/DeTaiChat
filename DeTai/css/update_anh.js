@@ -22,12 +22,10 @@ $(function(){
                 data : JSON.stringify({thongtin_update: thongtin }),
                 success: function(res){
                     
-                    window.location.href = "localhost:3000/chat";
                 }
-    })
+            })
         }
         reader.readAsDataURL(file);
-       
-       
+        location.reload();
     })
 })
