@@ -19,11 +19,17 @@ module.exports={
         delete entity.ma_tk
         return db.patch(table,entity,condition);
     },
+    patchtinnhan: function(entity){
+        const condition={
+            thoigian: entity.id
+        }
+        delete entity.id
+        return db.patch(table,entity,condition);
+    },
     del: function(id){
         const condition={
-            id_tk: id
+            thoigian: id
         }
-        delete entity.id_tk
         return db.del(table,condition);
     },
     singlebytaikhoan:async function(matk){

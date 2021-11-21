@@ -36,8 +36,7 @@ const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3(
   { 
-    accessKeyId:'AKIA3GW5TNQ7R7O4MVF7',
-    secretAccessKey:'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',
+    
   }
 );
 //const bucket = 'detaizalo';
@@ -98,7 +97,8 @@ io.on('connection',(socket)=>{
           "id_nguoinhan":thongtin.id_banbe,
           "noidung":`${duongdanurl}${filePath}`,
           "thoigian":thongtin.tg,
-          "loaitinnhan":'hinhanh'
+          "loaitinnhan":'hinhanh',
+          "trangthai":'hoạt động'
       }
        await table_tinnhan.add(entity);
      })
@@ -146,7 +146,8 @@ io.on('connection',(socket)=>{
           "id_nhom":thongtin.id_nhom,
           "noidung":`${duongdanurl}${filePath}`,
           "thoigian":thongtin.thoigian_database,
-          "loaitinnhan":'hinhanh'
+          "loaitinnhan":'hinhanh',
+          "trangthai":'hoạt động'
       }
       await table_tk_nhom.add(entity);
 
@@ -166,7 +167,8 @@ io.on('connection',(socket)=>{
         "id_nhom":id_nhom[0],
         "noidung":thongtin.tinnhan,
         "thoigian":thongtin.thoigian_database,
-        "loaitinnhan":'vanban'
+        "loaitinnhan":'vanban',
+        "trangthai":'hoạt động'
       }
       await table_tk_nhom.add(entity);
      })
@@ -192,7 +194,8 @@ io.on('connection',(socket)=>{
           "id_nguoinhan":data.user_id,
           "noidung":data.message,
           "thoigian":data.tg,
-          "loaitinnhan":'vanban'
+          "loaitinnhan":'vanban',
+          "trangthai":'hoạt động'
       }
       await table_tinnhan.add(entity);
     })  
@@ -240,7 +243,8 @@ io.on('connection',(socket)=>{
             "id_nguoinhan":data.id_banbe,
             "noidung":`${duongdanurl};${data.tenfile};${filePath}`,
             "thoigian":data.tg,
-            "loaitinnhan":'file'
+            "loaitinnhan":'file',
+            "trangthai":'hoạt động'
         }
       await table_tinnhan.add(entity);
         
@@ -281,7 +285,8 @@ io.on('connection',(socket)=>{
       "id_nhom":thongtin.id_nhom,
       "noidung":`${duongdanurl};${thongtin.tenfile};${filePath}`,
       "thoigian":thongtin.thoigian_database,
-      "loaitinnhan":'file'
+      "loaitinnhan":'file',
+      "trangthai":'hoạt động'
   }
   await table_tk_nhom.add(entity);
    })
@@ -330,7 +335,8 @@ io.on('connection',(socket)=>{
         "id_nguoinhan":data.id_banbe,
         "noidung":`${duongdanurl}${filePath};${data.tenfile}`,
         "thoigian":data.tg,
-        "loaitinnhan":'video'
+        "loaitinnhan":'video',
+        "trangthai":'hoạt động'
     }
     await table_tinnhan.add(entity);
   }) 
@@ -370,10 +376,43 @@ io.on('connection',(socket)=>{
     "id_nhom":thongtin.id_nhom,
     "noidung":`${duongdanurl}${filePath};${thongtin.style}`,
     "thoigian":thongtin.thoigian_database,
-    "loaitinnhan":'video'
+    "loaitinnhan":'video',
+    "trangthai":'hoạt động'
 }
 await table_tk_nhom.add(entity);
  })
+ //thuhoitinnhan 1-1
+ socket.on('thuhoi',async data =>{ 
+  
+  var socketID= users[data.id_user];
+  if(users[data.id_user]===""){
+    socket.to(socketID).emit('thuhoi',data);
+  }
+  else{
+   //var socketID= users[data.id_user];
+  socket.to(socketID).emit('thuhoi',data);
+
+  }
+    const entity={
+      id:data.id,
+      trangthai:'thu hồi'
+    }
+    await table_tinnhan.patchtinnhan(entity);
+})
+//thuhoitinnhan nhóm
+socket.on('thuhoigroup',async (room,thongtin) =>{ 
+  if(room === " "){
+    socket.to(room).emit('thuhoigroup',thongtin);
+  }
+  else{
+  socket.to(room).emit('thuhoigroup',thongtin);
+   }
+   const entity={
+    id:thongtin,
+    trangthai:'thu hồi'
+  }
+  await table_tk_nhom.patchtinnhan(entity);
+})
 })
 
 

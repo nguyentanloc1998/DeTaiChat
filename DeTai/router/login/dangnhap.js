@@ -223,7 +223,8 @@ router.post('/nhomchat',async (req,res)=>{
         "id_nhom":id_nhomm[0],
         "thoigian":ds_group.thoigian,
         "noidung":'Hi',
-        "loaitinnhan":'vanban'
+        "loaitinnhan":'vanban',
+        "trangthai":'hoạt động'
     }
     await table_tk_nhom.add(add_mygroup);
     for(let i=0;i<ds_group.id_banbe.length;i++){
@@ -232,7 +233,8 @@ router.post('/nhomchat',async (req,res)=>{
         "id_nhom":id_nhomm[0],
         "thoigian":ds_group.thoigian,
         "noidung":'Hi',
-        "loaitinnhan":'vanban'
+        "loaitinnhan":'vanban',
+        "trangthai":'hoạt động'
     }
     console.log(entity1);
     await table_tk_nhom.add(entity1);

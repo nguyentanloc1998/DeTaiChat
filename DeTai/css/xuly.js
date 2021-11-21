@@ -329,17 +329,17 @@ $(function(){
                                 const thoigian_nguoiguigroup= data[i].thoigian;
                                 const gio_phutnguoiguigroup =thoigian_nguoiguigroup.slice(11,16);
                                 
-                                   if(data[i].loaitinnhan === 'vanban'){        
-                                    nguoigui(data[i].ten_tk,gio_phutnguoiguigroup,data[i].noidung,data[i].url)
+                                   if(data[i].loaitinnhan === 'vanban' && data[i].trangthai==='hoạt động'){        
+                                    nguoigui(data[i].id_nguoinhan,thoigian_nguoiguigroup,data[i].ten_tk,gio_phutnguoiguigroup,data[i].noidung,data[i].url)
                                    }
-                                   else if(data[i].loaitinnhan === 'hinhanh'){
+                                   else if(data[i].loaitinnhan === 'hinhanh' && data[i].trangthai==='hoạt động'){
                                        nguoiguihinhanh(data[i].ten_tk,gio_phutnguoiguigroup,data[i].noidung,data[i].url)
                                    }
-                                   else if(data[i].loaitinnhan === 'file'){
+                                   else if(data[i].loaitinnhan === 'file' && data[i].trangthai==='hoạt động'){
                                        const duongdan= data[i].noidung.split(';');
                                        console.log(`${duongdan[0]}${duongdan[2]}`);
                                         nguoiguifile(data[i].ten_tk,gio_phutnguoiguigroup,duongdan[1],data[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);
-                                   }else if(data[i].loaitinnhan === 'video'){
+                                   }else if(data[i].loaitinnhan === 'video' && data[i].trangthai==='hoạt động'){
                                        const style = data[i].noidung.split(';');
                                     nguoiguivideo(data[i].ten_tk,gio_phutnguoiguigroup,style[0],data[i].url,style[1])
 
@@ -348,24 +348,26 @@ $(function(){
                                else{
                                 const thoigian_nguoinhangroup= data[i].thoigian;
                                 const gio_phutnguoinhangroup =thoigian_nguoinhangroup.slice(11,16);
-                                if(data[i].loaitinnhan === 'vanban'){
-                                    nguoinhan(data[i].ten_tk,gio_phutnguoinhangroup,data[i].noidung,data[i].url)
+                                if(data[i].loaitinnhan === 'vanban' && data[i].trangthai==='hoạt động'){
+                                    nguoinhan(thoigian_nguoinhangroup,data[i].ten_tk,gio_phutnguoinhangroup,data[i].noidung,data[i].url)
                                 }
-                                else if(data[i].loaitinnhan === 'hinhanh'){
+                                else if(data[i].loaitinnhan === 'hinhanh' && data[i].trangthai==='hoạt động'){
                                     nguoinhanhinhanh(data[i].ten_tk,gio_phutnguoinhangroup,data[i].noidung,data[i].url)
                                 }
-                                else if(data[i].loaitinnhan === 'file'){
+                                else if(data[i].loaitinnhan === 'file' && data[i].trangthai==='hoạt động'){
                                     const duongdann= data[i].noidung.split(';');
                                      nguoinhanfile(data[i].ten_tk,gio_phutnguoinhangroup,duongdann[1],data[i].url,`${duongdann[0]}${duongdann[2]}`,duongdann[1])
                                 }
-                                else if(data[i].loaitinnhan === 'video'){
+                                else if(data[i].loaitinnhan === 'video' && data[i].trangthai==='hoạt động'){
                                     const style = data[i].noidung.split(';');
                                  nguoinhanvideo(data[i].ten_tk,gio_phutnguoinhangroup,style[0],data[i].url,style[1])
                                 }
                                }
-                            }   
+                            } 
                         }
+                        
                     }) 
+ 
                     // const form_mess = document.querySelector('#kt_chat_messenger');
                      const form_group = document.querySelector('#form_a');
                      const div_to = document.createElement('div');
@@ -512,8 +514,8 @@ $(function(){
                                 url : url_nguoigui
                             });
                            
-                            nguoigui(tentk,gio_phut,message,url_nguoigui);
-                            document.querySelector('#chat-mes').value=''
+                            nguoigui(user_idd,datatime,tentk,gio_phut,message,url_nguoigui);
+                            document.querySelector('#chat-mes').value=''                            
                         }
                         else{
                             const selector = document.querySelector('#file');
@@ -551,12 +553,12 @@ $(function(){
                                 url : url_nguoigui
                             });
                            
-                            nguoigui(tentk,gio_phut,message,url_nguoigui);
+                            nguoigui(user_idd,datatime,tentk,gio_phut,message,url_nguoigui);
                             document.querySelector('#chat-mes').value=''
                         }
                     })
-               
-               
+
+                   
                  // lay tai lieu
                  document.querySelector('#tailieu').addEventListener('change', function(){
                     console.log(user_idd);
@@ -810,9 +812,10 @@ $(function(){
                     messages.appendChild(div);
                     messages.scrollTop = messages.scrollHeight;   
                 }         
-                function nguoigui(tennguoinhan,thoigian,noidung,url){
+                function nguoigui(id_user,id,tennguoinhan,thoigian,noidung,url){
                     const div = document.createElement('div');
-                    div.className=('d-flex justify-content-end mb-10');
+                    div.id=id_user;
+                    div.className=('d-flex justify-content-end mb-10 ');
                     const div2 = document.createElement('div');
                     div2.className = ('d-flex flex-column align-items-end');
                     const div3 = document.createElement('div');
@@ -838,17 +841,70 @@ $(function(){
                     div3.append(div3_1);
                     div3.append(div3_2);
                     const div4 = document.createElement('div');
-                    div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
+                    div4.id=id;
+                    div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end  ');
                     const a = document.createElement('a');
+                    a.textContent = noidung;
+                    div4.append(a);
+                    const div46 = document.createElement('div');
+                    div46.className='d-flex align-items-center mb-2 overlay'
+                    const div6 = document.createElement('div');
+                    const div6_1 = document.createElement('div');
+                    div6_1.className='me-3 overlay-layer';
+                    div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    <i class="bi bi-three-dots fs-3"></i>
+                </button>`
+                    div6.append(div6_1)
+                    div6_1.addEventListener('click', function thuhoi(e){
+                        e.preventDefault();
+                        var x = document.createElement("SELECT");
+                        x.id='mySelect';
+                        x.className='overlay-layer';
+                        var z = document.createElement("option");
+                        z.value='thu hồi'
+                        var t = document.createTextNode("Thu hồi");
+                        x.addEventListener('click',function thuhoitinnhan(e){
+                            e.preventDefault();
+                            let b= document.querySelector('#mySelect').value;
+                            if(b==='thu hồi'){
+                                const c = document.createElement('a');
+                                c.textContent = `Tin nhắn đã được thu hồi`;
+                                div4.replaceChild(c,a)
+                            }
+                            const tt={
+                                'id':id,
+                                'id_user':id_user,
+                            }
+                            socket.emit('thuhoi',tt);
+                        })
+                        var z1 = document.createElement("option");
+                        var t1 = document.createTextNode("");
+                    
+                        z.appendChild(t);
+                        z1.appendChild(t1);
+                        x.append(z1)
+                        x.append(z)
+                        div6.append(x);
+                    })
+                    div46.append(div6)
+                    div46.append(div4)
                     div.append(div2);
                     div2.append(div3);
-                    div2.append(div4);
-                    div4.append(a);
-                    a.textContent = noidung;
+                    div2.append(div46);              
                     messages.appendChild(div);
                     messages.scrollTop = messages.scrollHeight;
+
+                   
+                   
                 }
-                function nguoinhan(tennguoigui,thoigian,noidung,url){
+                function nguoinhan(id,tennguoigui,thoigian,noidung,url){
+                    socket.on('thuhoi',data =>{
+                        if(data.id===id){
+                            const c = document.createElement('a');
+                            c.textContent = `Tin nhắn đã được thu hồi`;
+                            tinnhan.replaceChild(c,tin)
+                        }
+                    })
                     const chatItem = document.createElement('div');
                     chatItem.className=('d-flex justify-content-start mb-10');
                     const chatItem2 = document.createElement('div');
@@ -873,16 +929,18 @@ $(function(){
                     ha_ten.append(anh);
                     ha_ten.append(tengio);
                     const tinnhan = document.createElement('div')
+                    tinnhan.id=id;
                     tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                     const tin = document.createElement('a');
+                    tin.textContent = noidung;
+                    tinnhan.append(tin);
                     chatItem.append(chatItem2);
                     chatItem2.append(ha_ten);
-                    chatItem2.append(tinnhan);
-                    tinnhan.append(tin);
-                    tin.textContent = noidung;
+                    chatItem2.append(tinnhan);              
                     messages.appendChild(chatItem);
                     // scroll down
                     messages.scrollTop = messages.scrollHeight;
+                    
                 }
                 function nguoinhanhinhanh(tennguoinhan,thoigian,nhananh,url){
                     const chatItem = document.createElement('div');
@@ -922,7 +980,7 @@ $(function(){
                     messages.scrollTop = messages.scrollHeight;
                 }
                  socket.on('user-chat',(message)=>{
-                     nguoinhan(message.ten,message.tg_giophut,message.message,message.url);
+                     nguoinhan(message.tg,message.ten,message.tg_giophut,message.message,message.url);
                  })
                  socket.on('guianh',thongtin=>{
                      console.log(thongtin);
@@ -946,7 +1004,6 @@ $(function(){
 })
 //tao group
 $(function(){
-
     const form_dsGroup = document.querySelector('#form_ds_group')
    
     $.ajax({
@@ -996,11 +1053,9 @@ $(function(){
                         //  const x = document.createElement('x');
                         //  x.className='tagify__tag__removeBtn';
                         //  x.role='button';
-                        //tag_element.append(x);
-                        tag_element.innerHTML=`<x title="" class="tagify__tag__removeBtn" role="button" aria-label="remove tag"></x>`;
-                        tag_element.innerHTML=`<div><span class="tagify__tag-text">${ten_group}</span></div>`;
+                        // tag_element.append(x);
+                        tag_element.innerHTML=`<x title="" class="tagify__tag__removeBtn" role="button" aria-label="remove tag"></x><div><span class="tagify__tag-text">${ten_group}</span></div>`;
                         tag_form.appendChild(tag_element);
-
                         //lay du lieu luu xuong database
                         const tao_group = document.querySelector('#tao_room');
                         tao_group.addEventListener('click', getName_adddatabase);
@@ -1304,7 +1359,7 @@ $(function(){
                     }   
                        if(doantinnhan.length>0){
                        socket.emit("user-group",nhom_chat[i].tennhom,thongtin);
-                       nguoigui(tentk,gio_phut_group,doantinnhan,url_idmy);
+                       nguoigui(nhom_chat[i].tennhom,datatime_group,tentk,gio_phut_group,doantinnhan,url_idmy);
                          document.querySelector('#doantinnhan_group').value='';
                        }
                        else{ 
@@ -1346,7 +1401,8 @@ $(function(){
                             "id_nhom":nhom_chat[i].id_nhom
                         }  
                         socket.emit("user-group",nhom_chat[i].tennhom,thongtin);
-                        nguoigui(tentk,gio_phut_group,doantinnhan,url_idmy);
+                        console.log(thongtin);
+                        nguoigui(nhom_chat[i].tennhom,datatime_group,tentk,gio_phut_group,doantinnhan,url_idmy);
                           document.querySelector('#doantinnhan_group').value='';
 
                     }
@@ -1406,17 +1462,17 @@ $(function(){
                             if(thongtin[i].ma_tk == my_id){ 
                                 const thoigian_nguoiguigroup= thongtin[i].thoigian;                    
                                   const gio_phutnguoiguigroup =thoigian_nguoiguigroup.slice(11,16);
-                                  if(thongtin[i].loaitinnhan==='vanban'){
-                                    nguoigui(thongtin[i].ten_tk,gio_phutnguoiguigroup,thongtin[i].noidung,thongtin[i].url);
+                                  if(thongtin[i].loaitinnhan==='vanban' && thongtin[i].trangthai==='hoạt động'){
+                                    nguoigui(thongtin[i].tennhom,thoigian_nguoiguigroup,thongtin[i].ten_tk,gio_phutnguoiguigroup,thongtin[i].noidung,thongtin[i].url);
                                   }
-                                  else if(thongtin[i].loaitinnhan==='hinhanh'){
+                                  else if(thongtin[i].loaitinnhan==='hinhanh'&& thongtin[i].trangthai==='hoạt động'){
                                       nguoiguihinhanhgroup(thongtin[i].ten_tk,gio_phutnguoiguigroup,thongtin[i].noidung,thongtin[i].url);
                                   }
-                                  else if(thongtin[i].loaitinnhan==='file'){
+                                  else if(thongtin[i].loaitinnhan==='file'&& thongtin[i].trangthai==='hoạt động'){
                                       const duongdan= thongtin[i].noidung.split(';');
                                     nguoiguifilegroup(thongtin[i].ten_tk,gio_phutnguoiguigroup,duongdan[1],thongtin[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);
                                 }
-                                else if(thongtin[i].loaitinnhan==='video'){
+                                else if(thongtin[i].loaitinnhan==='video'&& thongtin[i].trangthai==='hoạt động'){
                                     const duongdan= thongtin[i].noidung.split(';');
                                   nguoiguivideogroup(thongtin[i].ten_tk,gio_phutnguoiguigroup,duongdan[0],thongtin[i].url,duongdan[1]);
                               }
@@ -1425,18 +1481,18 @@ $(function(){
                             else{
                                 const thoigian_nguoinhangroup= thongtin[i].thoigian;
                                 const gio_phutnguoinhangroup =thoigian_nguoinhangroup.slice(11,16);
-                                if(thongtin[i].loaitinnhan==='vanban'){
-                                    nguoinhan(thongtin[i].ten_tk,gio_phutnguoinhangroup,thongtin[i].noidung,thongtin[i].url);
+                                if(thongtin[i].loaitinnhan==='vanban'&& thongtin[i].trangthai==='hoạt động'){
+                                    nguoinhan(thoigian_nguoinhangroup,thongtin[i].ten_tk,gio_phutnguoinhangroup,thongtin[i].noidung,thongtin[i].url);
                                 }
-                                else if(thongtin[i].loaitinnhan==='hinhanh'){
+                                else if(thongtin[i].loaitinnhan==='hinhanh'&& thongtin[i].trangthai==='hoạt động'){
                                     nguoinhanhinhanhgroup(thongtin[i].ten_tk,gio_phutnguoinhangroup,thongtin[i].noidung,thongtin[i].url);
                                 }
-                                else if(thongtin[i].loaitinnhan==='file'){
+                                else if(thongtin[i].loaitinnhan==='file'&& thongtin[i].trangthai==='hoạt động'){
                                     const duongdan= thongtin[i].noidung.split(';');
                                     nguoinhanfilegroup(thongtin[i].ten_tk,gio_phutnguoinhangroup,duongdan[1],thongtin[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);                               
                                 
                                 }
-                                else if(thongtin[i].loaitinnhan==='video'){
+                                else if(thongtin[i].loaitinnhan==='video'&& thongtin[i].trangthai==='hoạt động'){
                                     const duongdan= thongtin[i].noidung.split(';');
                                     nguoinhanvideogroup(thongtin[i].ten_tk,gio_phutnguoinhangroup,duongdan[0],thongtin[i].url,duongdan[1]);                               
                                 
@@ -1616,10 +1672,11 @@ $(function(){
                     div_khungtong.appendChild(div);
                     div_khungtong.scrollTop = div_khungtong.scrollHeight;   
                 } 
-                     function nguoigui(tennguoinhan,thoigian,noidung,url){
+                     function nguoigui(id_user,id,tennguoinhan,thoigian,noidung,url){
                          const div_khungtong = document.querySelector('#loadtinnhan_nhom')
                          const div = document.createElement('div');
-                         div.className=('d-flex justify-content-end mb-10');
+                         div.id=id_user;
+                         div.className=('d-flex justify-content-end mb-10 ');
                          const div2 = document.createElement('div');
                          div2.className = ('d-flex flex-column align-items-end');
                          const div3 = document.createElement('div');
@@ -1645,17 +1702,56 @@ $(function(){
                          div3.append(div3_1);
                          div3.append(div3_2);
                          const div4 = document.createElement('div');
-                         div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
+                         div4.id=id;
+                         div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end  ');
                          const a = document.createElement('a');
+                         a.textContent = noidung;
+                         div4.append(a);
+                         const div46 = document.createElement('div');
+                         div46.className='d-flex align-items-center mb-2 overlay'
+                         const div6 = document.createElement('div');
+                         const div6_1 = document.createElement('div');
+                         div6_1.className='me-3 overlay-layer';
+                         div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                         <i class="bi bi-three-dots fs-3"></i>
+                     </button>`
+                         div6.append(div6_1)
+                         div6_1.addEventListener('click', function thuhoi(e){
+                             e.preventDefault();
+                             var x = document.createElement("SELECT");
+                             x.id='mySelect';
+                             x.className='overlay-layer';
+                             var z = document.createElement("option");
+                             z.value='thu hồi'
+                             var t = document.createTextNode("Thu hồi");
+                             x.addEventListener('click',function thuhoitinnhan(e){
+                                 e.preventDefault();
+                                 let b= document.querySelector('#mySelect').value;
+                                 if(b==='thu hồi'){
+                                     const c = document.createElement('a');
+                                     c.textContent = `Tin nhắn đã được thu hồi`;
+                                     div4.replaceChild(c,a)
+                                 }
+                                 socket.emit('thuhoigroup',id_user,id);
+                             })
+                             var z1 = document.createElement("option");
+                             var t1 = document.createTextNode("");
+                         
+                             z.appendChild(t);
+                             z1.appendChild(t1);
+                             x.append(z1)
+                             x.append(z)
+                             div6.append(x);
+                         })
+                         div46.append(div6)
+                         div46.append(div4)
                          div.append(div2);
                          div2.append(div3);
-                         div2.append(div4);
-                         div4.append(a);
-                         a.textContent = noidung;
+                         div2.append(div46);              
                          div_khungtong.appendChild(div);
                          div_khungtong.scrollTop = div_khungtong.scrollHeight;
                      }
-                     function nguoinhan(tennguoigui,thoigian,noidung,url){
+                     function nguoinhan(id,tennguoigui,thoigian,noidung,url){
                          const div_khungtong = document.querySelector('#loadtinnhan_nhom')
                          const chatItem = document.createElement('div');
                          chatItem.className=('d-flex justify-content-start mb-10');
@@ -1681,6 +1777,7 @@ $(function(){
                          ha_ten.append(anh);
                          ha_ten.append(tengio);
                          const tinnhan = document.createElement('div')
+                         tinnhan.id=id
                          tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                          const tin = document.createElement('a');
                          chatItem.append(chatItem2);
@@ -1691,6 +1788,13 @@ $(function(){
                          div_khungtong.appendChild(chatItem);
                          // scroll down
                          div_khungtong.scrollTop = div_khungtong.scrollHeight;
+                         socket.on('thuhoigroup',data=>{
+                            if(data===id){
+                               const c = document.createElement('a');
+                               c.textContent = `Tin nhắn đã được thu hồi`;
+                               tinnhan.replaceChild(c,tin)
+                            }
+                        })
                      }
                      function nguoiguifilegroup(tennguoinhan,thoigian,noidung,url,link,tendownload){
                         const div_khungtong = document.querySelector('#loadtinnhan_nhom')
@@ -1775,7 +1879,7 @@ $(function(){
 
                      socket.on("chatgroup",data=>{
                         console.log(data);
-                        nguoinhan(data.ten_nguoigui,data.thoigian_hienthi,data.tinnhan,data.url);
+                        nguoinhan(data.thoigian_database,data.ten_nguoigui,data.thoigian_hienthi,data.tinnhan,data.url);
                     })
                     socket.on("guianh_group",data=>{
                       //console.log(data);
