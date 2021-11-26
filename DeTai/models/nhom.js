@@ -28,6 +28,13 @@ module.exports={
            return null;
        }
        return row;
-    }
+    },
+    timkiemallnhombyid:async function(id_tk){
+        const row= await db.load(`SELECT * FROM ${table} inner join taikhoan_nhom on nhom.id_nhom=taikhoan_nhom.id_nhom where id_tk='${id_tk}' group by tennhom;`);
+        if(row.length===0){
+            return null;
+        }
+        return row;
+     },
 
 };

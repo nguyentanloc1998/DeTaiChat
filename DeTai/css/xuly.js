@@ -1329,6 +1329,29 @@ $(function(){
                             data : JSON.stringify({ds_group: thongtin }),
                             success: function(res){ 
                                 const tennhomm = res.tennhom
+                                if(tennhomm==='thatbai'){
+                                    toastr.options = {
+                                        "closeButton": false,
+                                        "debug": false,
+                                        "newestOnTop": false,
+                                        "progressBar": true,
+                                        "positionClass": "toastr-top-right",
+                                        "preventDuplicates": false,
+                                        "onclick": null,
+                                        "showDuration": "300",
+                                        "hideDuration": "500",
+                                        "timeOut": "3000",
+                                        "extendedTimeOut": "500",
+                                        "showEasing": "swing",
+                                        "hideEasing": "linear",
+                                        "showMethod": "fadeIn",
+                                        "hideMethod": "fadeOut"
+                                      };
+                                      
+                                      toastr.error("Tên Nhóm Trùng Vui Lòng Nhập Lại!");
+                                      
+                                }
+                                else{
                                     const form_chat_group = document.querySelector('#kt_chat_contacts_body_group');
                                     const div = document.createElement('div');
                                     div.className='hover scroll-y me-n5 pe-5 h-200px h-lg-auto';
@@ -1358,45 +1381,11 @@ $(function(){
                                     form_chat_group.appendChild(div);
                                     ten_group.value="";   
                                     location.reload();
+                                }
+                                   
                                      
                              }
-                        }) 
-                        // function chatgroup(){
-                        //     const form_mess = document.querySelector('#kt_chat_messenger');
-                        //     if(form_mess.style.display = 'block'){
-                        //        form_mess.style.display = 'none';
-                        //     }
-                        //     form_mess.style.display = 'block'
-                        //     const tengroup = document.querySelector('#tenban');
-                        //     tengroup.textContent=ten_group;
-
-                        // }
-                    //     const div_chatgroup = document.createElement('div');
-                    //     div_chatgroup.className='hover scroll-y me-n5 pe-5 h-200px h-lg-auto';
-                    //     div_chatgroup.style='max-height: 416px;';
-                    //    // div_chatgroup.addEventListener('click', chatgroup)
-                    //     div_chatgroup.innerHTML=`<div class="d-flex flex-stack py-4">
-                    //     <!--begin::Details-->
-                    //     <div class="d-flex align-items-center">
-                    //         <!--begin::Avatar-->
-                    //         <div class="symbol symbol-45px symbol-circle">
-                    //             <img src="/sign-in/svg/anhmacdinh.jpg">
-                    //         </div>
-                    //         <!--end::Avatar-->
-                    //         <!--begin::Details-->
-                    //         <div class="ms-5">
-                    //             <a id="tennhomchat" href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">${ten_group}</a>
-                    //         </div>
-                    //         <!--end::Details-->
-                    //     </div>
-                    //     <!--end::Details-->
-                    //     <!--begin::Lat seen-->
-                    //     <div class="d-flex flex-column align-items-end ms-2">
-                    //         <span class="text-muted fs-7 mb-1">3 hrs</span>
-                    //     </div>
-                    //     <!--end::Lat seen-->
-                    // </div>`;
-                    //     add_groupchat.appendChild(div_chatgroup);         
+                        })        
                 }
                 
                
@@ -1437,7 +1426,7 @@ $(function(){
                 <!--end::Details-->
                 <!--begin::Lat seen-->
                 <div class="d-flex flex-column align-items-end ms-2">
-                    <span class="text-muted fs-7 mb-1">3 hrs</span>
+                    <span class="text-muted fs-7 mb-1">1h</span>
                 </div>
                 <!--end::Lat seen-->
             </div>`;
@@ -2674,4 +2663,40 @@ $(function(){
            
         }
     })  
+})
+//timkiembanchat
+$(function(){
+    $(document).ready(function(){
+        $("#timbanchat").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#kt_chat_contacts_body >div ").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+          $("#kt_chat_contacts_body_group >div ").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+})
+//timkiemchothembanbe
+$(function(){
+    $(document).ready(function(){
+        $("#timkiem_enter1").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#dsbanchuathemgroup > a").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });   
+        });
+      });
+})
+//timkiemchokichbanbe
+$(function(){
+    $(document).ready(function(){
+        $("#timkiemnguoikich").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#dsbanmuonkich > a").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });   
+        });
+      });
 })

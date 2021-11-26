@@ -9,8 +9,7 @@ const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3(
   { 
-    accessKeyId:'AKIA3GW5TNQ7R7O4MVF7',
-    secretAccessKey:'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',
+    
   }
 );
 //authu
@@ -320,10 +319,19 @@ router.post('/nhomchat',async (req,res)=>{
         "id_chuphong":req.session.AuthUser.ma_tk
     }
     console.log(entity);
-    await table_nhom.add(entity);
+    const sosanhtennhom = await table_nhom.timkiemallnhombyid(req.session.AuthUser.ma_tk);
+    let a=0
+    for(let i=0; i<sosanhtennhom.length;i++){
+        if(sosanhtennhom[i].tennhom===ds_group.ten_nhom){
+            a++;
+            res.send({tennhom: 'thatbai'});
+        }
+    }
+    console.log(a);
+    if(a===0){
+         await table_nhom.add(entity);
     const id_nhom = await table_nhom.single(ds_group.ten_nhom);
     let id_nhomm = id_nhom.map(a=> a.id_nhom);
-   // console.log("a"+id_nhomm[0]);
     const add_mygroup={
         "id_tk":req.session.AuthUser.ma_tk,
         "id_nhom":id_nhomm[0],
@@ -332,7 +340,7 @@ router.post('/nhomchat',async (req,res)=>{
         "loaitinnhan":'vanban',
         "trangthai":'hoạt động'
     }
-    await table_tk_nhom.add(add_mygroup);
+   await table_tk_nhom.add(add_mygroup);
     for(let i=0;i<ds_group.id_banbe.length;i++){
     const entity1 = {
         "id_tk":ds_group.id_banbe[i],
@@ -343,9 +351,11 @@ router.post('/nhomchat',async (req,res)=>{
         "trangthai":'hoạt động'
     }
     console.log(entity1);
-    await table_tk_nhom.add(entity1);
+   await table_tk_nhom.add(entity1);
     }  
     res.send({tennhom: ds_group.ten_nhom});
+    }
+  
   });
 router.get('/nhomchat',async (req,res)=>{
     const user = await table_tk_nhom.singlebytkbytennhom(req.session.AuthUser.ma_tk);
