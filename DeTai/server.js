@@ -9,7 +9,9 @@ const body_parset = require('body-parser');
 const { symlink } = require('fs');
 //config folfer
 app.use(express.static('./css'));
-app.use(body_parset.json());
+app.use(body_parset.json(
+ { limit: '50mb'}
+));
 app.set('view engine','ejs','js');
 app.set('views','./view');
 //conver session with socket
@@ -36,7 +38,7 @@ const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3(
   { 
-    
+   
   }
 );
 //const bucket = 'detaizalo';
@@ -413,6 +415,100 @@ socket.on('thuhoigroup',async (room,thongtin) =>{
   }
   await table_tk_nhom.patchtinnhan(entity);
 })
+//thu hoi anh 1-1
+socket.on('thuhoihinhanh',async (thongtin) =>{
+  if(users[thongtin.id_user]===" "){
+    socket.to(socketID).emit('thuhoihinhanh',thongtin);
+  }
+  else{
+ var socketID= users[thongtin.id_user];
+  socket.to(socketID).emit('thuhoihinhanh',thongtin);
+}
+      const entity={
+        id:thongtin.idthoigian,
+        trangthai:'thu hồi'
+      }
+await table_tinnhan.patchtinnhan(entity);
+ 
+ })
+ //thuhoi hinh anh nhóm
+ socket.on('thuhoihinhanhgroup',async (room,thongtin) =>{ 
+  if(room === " "){
+    socket.to(room).emit('thuhoihinhanhgroup',thongtin);
+  }
+  else{
+  socket.to(room).emit('thuhoihinhanhgroup',thongtin);
+   }
+   const entity={
+    id:thongtin,
+    trangthai:'thu hồi'
+  }
+  await table_tk_nhom.patchtinnhan(entity);
+})
+//thu hoi video 1-1
+socket.on('thuhoivideo',async (thongtin) =>{
+  if(users[thongtin.id_user]===" "){
+    socket.to(socketID).emit('thuhoivideo',thongtin);
+  }
+  else{
+ var socketID= users[thongtin.id_user];
+  socket.to(socketID).emit('thuhoivideo',thongtin);
+}
+      const entity={
+        id:thongtin.idthoigian,
+        trangthai:'thu hồi'
+      }
+await table_tinnhan.patchtinnhan(entity);
+ 
+ })
+ //thu hoi file 1-1
+socket.on('thuhoifile',async (thongtin) =>{
+  if(users[thongtin.id_user]===" "){
+    socket.to(socketID).emit('thuhoifile',thongtin);
+  }
+  else{
+ var socketID= users[thongtin.id_user];
+  socket.to(socketID).emit('thuhoifile',thongtin);
+}
+console.log(thongtin);
+      const entity={
+        id:thongtin.idthoigian,
+        trangthai:'thu hồi'
+      }
+await table_tinnhan.patchtinnhan(entity);
+ 
+ })
+  //thuhoi file nhóm
+  socket.on('thuhoifilegroup',async (room,thongtin) =>{ 
+    if(room === " "){
+      socket.to(room).emit('thuhoifilegroup',thongtin);
+    }
+    else{
+    socket.to(room).emit('thuhoifilegroup',thongtin);
+     }
+     console.log(thongtin);
+     const entity={
+      id:thongtin,
+      trangthai:'thu hồi'
+    }
+    await table_tk_nhom.patchtinnhan(entity);
+  })
+   //thuhoi video nhóm
+   socket.on('thuhoivideogroup',async (room,thongtin) =>{ 
+    if(room === " "){
+      socket.to(room).emit('thuhoivideogroup',thongtin);
+    }
+    else{
+    socket.to(room).emit('thuhoivideogroup',thongtin);
+     }
+    // console.log(thongtin);
+     const entity={
+      id:thongtin,
+      trangthai:'thu hồi'
+    }
+    await table_tk_nhom.patchtinnhan(entity);
+  })
+
 })
 
 

@@ -1,5 +1,6 @@
+
 $(function(){
-    const dongy = document.querySelector('#kt_account_profile_details_submit');
+    const dongy = document.querySelector('#kt');
     dongy.addEventListener('click',(e)=>{
         e.preventDefault();
         const tentk = document.querySelector('#tentk').value;
@@ -15,17 +16,25 @@ $(function(){
                 email:email,
                 anh:e.target.result
             }
+            console.log(thongtin);
             $.ajax({
                 url:'/capnhatanh',
                 method:'POST',
                 contentType: 'application/json',
                 data : JSON.stringify({thongtin_update: thongtin }),
                 success: function(res){
-                    
+                    const a = res.data
+                    if(a==='thanhcong')
+                    {
+                        window.location.reload(true);
+                      
+                    }
                 }
             })
         }
+ 
         reader.readAsDataURL(file);
-        location.reload();
+        
     })
+   
 })

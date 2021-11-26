@@ -40,7 +40,7 @@ module.exports={
        return row;
     },
     timtatcatinnhan:async function(id_my,id_user){
-        const row= await db.load(`SELECT * FROM taikhoan inner join ${table} on taikhoan.ma_tk=tinnhan.id_tk where id_tk in('${id_my}','${id_user}') and id_nguoinhan in ('${id_user}','${id_my}') order by thoigian`);
+        const row= await db.load(`SELECT * FROM taikhoan inner join ${table} on taikhoan.ma_tk=tinnhan.id_tk where id_tk in('${id_my}','${id_user}') and id_nguoinhan in ('${id_user}','${id_my}') order by thoigian `);
         if(row.length===0){
             return null;
         }

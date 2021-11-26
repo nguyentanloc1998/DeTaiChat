@@ -11,16 +11,15 @@ module.exports={
     },
     patch: function(entity){
         const condition={
-            ma_tk: entity.ma_tk
+            id_nhom: entity.id_nhom
         }
-        delete entity.ma_tk
+        delete entity.id_nhom
         return db.patch(table,entity,condition);
     },
     del: function(id){
         const condition={
-            id_tk: id
+            id_nhom: id
         }
-        delete entity.id_tk
         return db.del(table,condition);
     },
     singlebytaikhoan:async function(matk){

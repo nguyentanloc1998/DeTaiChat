@@ -17,7 +17,6 @@ $(function(){
                // console.log(text);
                let gt = 0; 
                 for(let i =0;i<users.length;i++){
-                   
                     if(users[i].sdt===text){
                         gt += i;
                         const a = document.createElement('a');
@@ -77,15 +76,32 @@ $(function(){
                                 data : JSON.stringify({idketban: thongtin }),
                                 success: function(res){
                                     a.remove();
+                                    toastr.options = {
+                                        "closeButton": false,
+                                        "debug": false,
+                                        "newestOnTop": false,
+                                        "progressBar": false,
+                                        "positionClass": "toastr-top-center",
+                                        "preventDuplicates": false,
+                                        "onclick": null,
+                                        "showDuration": "300",
+                                        "hideDuration": "1000",
+                                        "timeOut": "5000",
+                                        "extendedTimeOut": "1000",
+                                        "showEasing": "swing",
+                                        "hideEasing": "linear",
+                                        "showMethod": "fadeIn",
+                                        "hideMethod": "fadeOut"
+                                      };
+                                      
+                                      toastr.success("Đã gửi kết bạn");
                                 }
                             })
-                        }
-                        
+                        }                       
                         function xoaketban(){
                             a.remove();
                         }
-                    }
-                   
+                    } 
                 }
                 if(gt===0){
                     const aa = document.createElement('a');
@@ -118,9 +134,10 @@ $(function(){
                    aa.append(div3);  
                     form.appendChild(aa);
                 }
-                    
+                document.querySelector('#timkiem_enter').value=''
             }
         })
+
     })
     
 })
@@ -241,6 +258,19 @@ $(function(){
                         div2.append(div5);
                         hienthi_khungchat.appendChild(div11);
                         div1.remove();
+                        toastr.options = {                                        
+                            "progressBar": true,
+                            "positionClass": "toastr-top-center",
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "2000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                          };
+                        toastr.success("Thêm bạn thành công");
                         location.reload();
                     }
                     
@@ -252,10 +282,27 @@ $(function(){
                         method:'DELETE',
                         //contentType: 'application/json',
                         //data : JSON.stringify({dongy_ketban: thongtin }),
-                        success: function(res){                          
+                        success: function(res){     
+                            const a = res.data
+                            if(a=== 'thanhcong'){
+                                toastr.options = {                                        
+                                    "progressBar": true,
+                                    "positionClass": "toastr-top-center",
+                                    "showDuration": "300",
+                                    "hideDuration": "1000",
+                                    "timeOut": "2000",
+                                    "extendedTimeOut": "1000",
+                                    "showEasing": "swing",
+                                    "hideEasing": "linear",
+                                    "showMethod": "fadeIn",
+                                    "hideMethod": "fadeOut"
+                                  };
+                                toastr.success("Bạn đã không đồng ý");
+                                div1.remove(); 
+                            }                     
                         }     
                     })  
-                    div1.remove(); 
+                    
             }
             }
 
@@ -318,7 +365,7 @@ $(function(){
                                   
                                        let user_idd = JSON.parse(user_id);
                                         
-                                        //loaddanhsachtinnhan
+                     //loaddanhsachtinnhan
                     $.ajax({
                         url:'/chat/danhsachtinnhan/' + user_idd,
                         contentType: 'application/json',
@@ -328,20 +375,19 @@ $(function(){
                                if(data[i].id_tk==ma_myid){
                                 const thoigian_nguoiguigroup= data[i].thoigian;
                                 const gio_phutnguoiguigroup =thoigian_nguoiguigroup.slice(11,16);
-                                
                                    if(data[i].loaitinnhan === 'vanban' && data[i].trangthai==='hoạt động'){        
                                     nguoigui(data[i].id_nguoinhan,thoigian_nguoiguigroup,data[i].ten_tk,gio_phutnguoiguigroup,data[i].noidung,data[i].url)
                                    }
                                    else if(data[i].loaitinnhan === 'hinhanh' && data[i].trangthai==='hoạt động'){
-                                       nguoiguihinhanh(data[i].ten_tk,gio_phutnguoiguigroup,data[i].noidung,data[i].url)
+                                       nguoiguihinhanh(data[i].id_nguoinhan,thoigian_nguoiguigroup,data[i].ten_tk,gio_phutnguoiguigroup,data[i].noidung,data[i].url)
                                    }
                                    else if(data[i].loaitinnhan === 'file' && data[i].trangthai==='hoạt động'){
                                        const duongdan= data[i].noidung.split(';');
                                        console.log(`${duongdan[0]}${duongdan[2]}`);
-                                        nguoiguifile(data[i].ten_tk,gio_phutnguoiguigroup,duongdan[1],data[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);
+                                        nguoiguifile(data[i].id_nguoinhan,thoigian_nguoiguigroup,data[i].ten_tk,gio_phutnguoiguigroup,duongdan[1],data[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);
                                    }else if(data[i].loaitinnhan === 'video' && data[i].trangthai==='hoạt động'){
                                        const style = data[i].noidung.split(';');
-                                    nguoiguivideo(data[i].ten_tk,gio_phutnguoiguigroup,style[0],data[i].url,style[1])
+                                    nguoiguivideo(data[i].id_nguoinhan,thoigian_nguoiguigroup,data[i].ten_tk,gio_phutnguoiguigroup,style[0],data[i].url,style[1])
 
                                 }
                                }
@@ -352,22 +398,22 @@ $(function(){
                                     nguoinhan(thoigian_nguoinhangroup,data[i].ten_tk,gio_phutnguoinhangroup,data[i].noidung,data[i].url)
                                 }
                                 else if(data[i].loaitinnhan === 'hinhanh' && data[i].trangthai==='hoạt động'){
-                                    nguoinhanhinhanh(data[i].ten_tk,gio_phutnguoinhangroup,data[i].noidung,data[i].url)
+                                    nguoinhanhinhanh(thoigian_nguoinhangroup,data[i].ten_tk,gio_phutnguoinhangroup,data[i].noidung,data[i].url)
                                 }
                                 else if(data[i].loaitinnhan === 'file' && data[i].trangthai==='hoạt động'){
                                     const duongdann= data[i].noidung.split(';');
-                                     nguoinhanfile(data[i].ten_tk,gio_phutnguoinhangroup,duongdann[1],data[i].url,`${duongdann[0]}${duongdann[2]}`,duongdann[1])
+                                     nguoinhanfile(thoigian_nguoinhangroup,data[i].ten_tk,gio_phutnguoinhangroup,duongdann[1],data[i].url,`${duongdann[0]}${duongdann[2]}`,duongdann[1])
                                 }
                                 else if(data[i].loaitinnhan === 'video' && data[i].trangthai==='hoạt động'){
                                     const style = data[i].noidung.split(';');
-                                 nguoinhanvideo(data[i].ten_tk,gio_phutnguoinhangroup,style[0],data[i].url,style[1])
+                                 nguoinhanvideo(thoigian_nguoinhangroup,data[i].ten_tk,gio_phutnguoinhangroup,style[0],data[i].url,style[1])
                                 }
                                }
                             } 
                         }
                         
                     }) 
- 
+                    
                     // const form_mess = document.querySelector('#kt_chat_messenger');
                      const form_group = document.querySelector('#form_a');
                      const div_to = document.createElement('div');
@@ -381,7 +427,7 @@ $(function(){
                      div_head_1.innerHTML=` <div class="symbol symbol-45px symbol-circle"><img src=${url}></div>
                      <!--begin::User-->
                      <div class="d-flex justify-content-center flex-column me-3 ms-5">
-                         <a id="tenban" href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1"></a>
+                         <a id="tenban" href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1">${ten}</a>
                          <!--begin::Info-->
                          <div class="mb-0 lh-1">
                              <span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
@@ -482,8 +528,8 @@ $(function(){
                          })
                         
 
-                     const tenban = document.querySelector('#tenban');
-                     tenban.textContent=ten;
+                     //const tenban = document.querySelector('#tenban');
+                    //  tenban.textContent=ten;
                     // tao cổng chat
                     const socket = io();          
                      const chatForm= document.querySelector('#chat-form');
@@ -532,7 +578,7 @@ $(function(){
                                 }
                                 socket.emit("guianh",thongtin);
                                 console.log(e.target.result);
-                                nguoiguihinhanh(tentk,gio_phut,e.target.result,url_nguoigui)         
+                                nguoiguihinhanh(user_idd,datatime,tentk,gio_phut,e.target.result,url_nguoigui)         
                             }
                             reader.readAsDataURL(selector.files[0]);
                              document.querySelector('#hinhanh').remove();
@@ -576,7 +622,7 @@ $(function(){
                         url : url_nguoigui
                         }
                         socket.emit("guifile",thongtin);
-                         nguoiguifile(tentk,gio_phut,tailieu.name,url_nguoigui,e.target.result,tailieu.name)
+                         nguoiguifile(user_idd,datatime,tentk,gio_phut,tailieu.name,url_nguoigui,e.target.result,tailieu.name)
                      }
                     
                      reader.readAsDataURL(tailieu);   
@@ -590,7 +636,7 @@ $(function(){
                     //     console.log(e.target.result);
                          const style = e.target.result.split(';')[0].split(':')[1];
                         console.log(e.target.result);
-                         nguoiguivideo(tentk,gio_phut,e.target.result,url_nguoigui,style)
+                         nguoiguivideo(user_idd,datatime,tentk,gio_phut,e.target.result,url_nguoigui,style)
                         thongtin={
                             video:e.target.result,
                             tenfile:style,
@@ -608,8 +654,9 @@ $(function(){
                      reader.readAsDataURL(video);   
                 })
 
-                function nguoiguivideo(tennguoinhan,thoigian,noidung,url,type){
+                function nguoiguivideo(id_uservideo,id_thoigianvideo,tennguoinhan,thoigian,noidung,url,type){
                     const div = document.createElement('div');
+                    div.id=id_uservideo
                     div.className=('d-flex justify-content-end mb-10');
                     const div2 = document.createElement('div');
                     div2.className = ('d-flex flex-column align-items-end');
@@ -636,6 +683,7 @@ $(function(){
                     div3.append(div3_1);
                     div3.append(div3_2);
                     const div4 = document.createElement('div');
+                    div4.id=id_thoigianvideo;
                     div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
                     const video = document.createElement('video');
                     video.height='200';
@@ -645,15 +693,70 @@ $(function(){
                     srouch.src=noidung;
                     srouch.type=type;
                     video.append(srouch);
+                    div4.append(video);
+                    const div46 = document.createElement('div');
+                    div46.className='d-flex align-items-center mb-2 overlay'
+                    const div6 = document.createElement('div');
+                    const div6_1 = document.createElement('div');
+                    div6_1.className='me-3 overlay-layer';
+                    div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    <i class="bi bi-three-dots fs-3"></i>
+                </button>`
+                    div6.append(div6_1)
+                    div6_1.addEventListener('click', function thuhoi(e){
+                        e.preventDefault();
+                        var x = document.createElement("SELECT");
+                        x.id='mySelect';
+                        x.className='overlay-layer';
+                        var z = document.createElement("option");
+                        z.value='thu hồi'
+                        var t = document.createTextNode("Thu hồi");
+                        x.addEventListener('click',function thuhoitinnhan(e){
+                            e.preventDefault();
+                            let b= document.querySelector('#mySelect').value;
+                            if(b==='thu hồi'){
+                                const c = document.createElement('a');
+                                c.textContent = `Tin nhắn đã được thu hồi`;
+                                div4.replaceChild(c,video)
+                            }
+                            const tt={
+                                'idthoigian':id_thoigianvideo,
+                                'id_user':id_uservideo,
+                            }
+                            socket.emit('thuhoivideo',tt);
+                        })
+                        var z1 = document.createElement("option");
+                        var t1 = document.createTextNode("");
+                        z1.value='null'
+                        z1.selected=true;
+                    
+                        z.appendChild(t);
+                        z1.appendChild(t1);
+                        x.append(z1)
+                        x.append(z)
+                        div6.append(x);
+                    })
+                    div46.append(div6)
+                    div46.append(div4)
+
+
+
                     div.append(div2);
                     div2.append(div3);
-                    div2.append(div4);
-                    div4.append(video);
+                    div2.append(div46);
+                    
                     
                     messages.appendChild(div);
                     messages.scrollTop = messages.scrollHeight;
                 }
-                function nguoinhanvideo(tennguoigui,thoigian,noidung,url,type){
+                function nguoinhanvideo(thoigianvideo,tennguoigui,thoigian,noidung,url,type){
+                    socket.on('thuhoivideo',data =>{
+                        if(data.idthoigian===thoigianvideo){
+                            const c = document.createElement('a');
+                            c.textContent = `Tin nhắn đã được thu hồi`;
+                            tinnhan.replaceChild(c,video)
+                        }
+                    })
                     const chatItem = document.createElement('div');
                     chatItem.className=('d-flex justify-content-start mb-10');
                     const chatItem2 = document.createElement('div');
@@ -678,6 +781,7 @@ $(function(){
                     ha_ten.append(anh);
                     ha_ten.append(tengio);
                     const tinnhan = document.createElement('div')
+                    tinnhan.id=thoigianvideo
                     tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                     const video = document.createElement('video');
                     video.height='200';
@@ -695,8 +799,9 @@ $(function(){
                     // scroll down
                     messages.scrollTop = messages.scrollHeight;
                 }
-                function nguoiguifile(tennguoinhan,thoigian,noidung,url,linktai,download){
+                function nguoiguifile(id_userfile,id_thoigianfile,tennguoinhan,thoigian,noidung,url,linktai,download){
                     const div = document.createElement('div');
+                    div.id=id_userfile
                     div.className=('d-flex justify-content-end mb-10');
                     const div2 = document.createElement('div');
                     div2.className = ('d-flex flex-column align-items-end');
@@ -723,19 +828,68 @@ $(function(){
                     div3.append(div3_1);
                     div3.append(div3_2);
                     const div4 = document.createElement('div');
+                    div4.id=id_thoigianfile
                     div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
                     const a = document.createElement('a');
                     a.href=linktai;
                     a.download=download;
+                    a.textContent = noidung;
+                    div4.append(a);
+                    const div46 = document.createElement('div');
+                    div46.className='d-flex align-items-center mb-2 overlay'
+                    const div6 = document.createElement('div');
+                    const div6_1 = document.createElement('div');
+                    div6_1.className='me-3 overlay-layer';
+                    div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    <i class="bi bi-three-dots fs-3"></i>
+                </button>`
+                    div6.append(div6_1)
+                    div6_1.addEventListener('click', function thuhoi(e){
+                        e.preventDefault();
+                        var x = document.createElement("SELECT");
+                        x.id='mySelect';
+                        x.className='overlay-layer';
+                        var z = document.createElement("option");
+                        z.value='thu hồi'
+                        var t = document.createTextNode("Thu hồi");
+                        x.addEventListener('click',function thuhoitinnhan(e){
+                            e.preventDefault();
+                            let b= document.querySelector('#mySelect').value;
+                            if(b==='thu hồi'){
+                                const c = document.createElement('a');
+                                c.textContent = `Tin nhắn đã được thu hồi`;
+                                div4.replaceChild(c,a)
+                                }
+                            const tt={
+                                'idthoigian':id_thoigianfile,
+                                'id_user':id_userfile,
+                            }
+                            socket.emit('thuhoifile',tt);
+                        })
+                        var z1 = document.createElement("option");
+                        var t1 = document.createTextNode("");
+                        z1.value='null'
+                        z1.selected=true;
+
+                        z.appendChild(t);
+                        z1.appendChild(t1);
+                        x.append(z1)
+                        x.append(z)
+                        div6.append(x);
+                    })
+                    div46.append(div6)
+                    div46.append(div4)
+
+
                     div.append(div2);
                     div2.append(div3);
-                    div2.append(div4);
-                    div4.append(a);
-                    a.textContent = noidung;
+                    div2.append(div46);
+                  
+                    
                     messages.appendChild(div);
                     messages.scrollTop = messages.scrollHeight;
                 }
-                function nguoinhanfile(tennguoigui,thoigian,noidung,url,duonglink,download){
+                function nguoinhanfile(idthoigianfile,tennguoigui,thoigian,noidung,url,duonglink,download){
                     const chatItem = document.createElement('div');
                     chatItem.className=('d-flex justify-content-start mb-10');
                     const chatItem2 = document.createElement('div');
@@ -760,21 +914,34 @@ $(function(){
                     ha_ten.append(anh);
                     ha_ten.append(tengio);
                     const tinnhan = document.createElement('div')
+                    tinnhan.id=idthoigianfile
                     tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                     const tin = document.createElement('a');
                     tin.href=duonglink;
                     tin.download=download;
+                    tin.textContent = noidung;
+                    tinnhan.append(tin);
+
                     chatItem.append(chatItem2);
                     chatItem2.append(ha_ten);
                     chatItem2.append(tinnhan);
-                    tinnhan.append(tin);
-                    tin.textContent = noidung;
+                   
+                   
                     messages.appendChild(chatItem);
                     // scroll down
                     messages.scrollTop = messages.scrollHeight;
+                    socket.on('thuhoifile',data =>{
+                        console.log(data);
+                        if(data.idthoigian===idthoigianfile){
+                            const c = document.createElement('a');
+                            c.textContent = `Tin nhắn đã được thu hồi`;
+                            tinnhan.replaceChild(c,tin);
+                        }
+                    })
                 }
-                function nguoiguihinhanh(tennguoigui,thoigian,anh,url){
+                function nguoiguihinhanh(id_user,id_thoigian,tennguoigui,thoigian,anh,url){
                     const div = document.createElement('div');
+                    div.id=id_user
                     div.className=('d-flex justify-content-end mb-10');
                     const div2 = document.createElement('div');
                     div2.className = ('d-flex flex-column align-items-end');
@@ -802,13 +969,59 @@ $(function(){
                     div3.append(div3_2);
                     const div4 = document.createElement('div');
                     div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
+                    div4.id=id_thoigian;
                     const imgg = document.createElement('img');
                     imgg.style='width:128px;height:128px;'
-                    div.append(div2);
-                    div2.append(div3);
-                    div2.append(div4);
                     div4.append(imgg);
                     imgg.src = anh;
+                    const div46 = document.createElement('div');
+                    div46.className='d-flex align-items-center mb-2 overlay'
+                    const div6 = document.createElement('div');
+                    const div6_1 = document.createElement('div');
+                    div6_1.className='me-3 overlay-layer';
+                    div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    <i class="bi bi-three-dots fs-3"></i>
+                </button>`
+                    div6.append(div6_1)
+                    div6_1.addEventListener('click', function thuhoi(e){
+                        e.preventDefault();
+                        var x = document.createElement("SELECT");
+                        x.id='mySelect';
+                        x.className='overlay-layer';
+                        var z = document.createElement("option");
+                        z.value='thu hồi'
+                        var t = document.createTextNode("Thu hồi");
+                        x.addEventListener('click',function thuhoitinnhan(e){
+                            e.preventDefault();
+                            let b= document.querySelector('#mySelect').value;
+                            if(b==='thu hồi'){
+                                const c = document.createElement('a');
+                                c.textContent = `Tin nhắn đã được thu hồi`;
+                                div4.replaceChild(c,imgg)
+                            }
+                            const tt={
+                                'idthoigian':id_thoigian,
+                                'id_user':id_user,
+                            }
+                            socket.emit('thuhoihinhanh',tt);
+                        })
+                        var z1 = document.createElement("option");
+                        var t1 = document.createTextNode("");
+                        z1.value='null'
+                        z1.selected=true;
+                        z.appendChild(t);
+                        z1.appendChild(t1);
+                        x.append(z1)
+                        x.append(z)
+                        div6.append(x);
+                    })
+                    div46.append(div6)
+                    div46.append(div4)
+
+                    div.append(div2);
+                    div2.append(div3);
+                    div2.append(div46);
+                    
                     messages.appendChild(div);
                     messages.scrollTop = messages.scrollHeight;   
                 }         
@@ -879,6 +1092,9 @@ $(function(){
                         })
                         var z1 = document.createElement("option");
                         var t1 = document.createTextNode("");
+                        z1.value='null'
+                        z1.selected=true;
+                        
                     
                         z.appendChild(t);
                         z1.appendChild(t1);
@@ -942,7 +1158,14 @@ $(function(){
                     messages.scrollTop = messages.scrollHeight;
                     
                 }
-                function nguoinhanhinhanh(tennguoinhan,thoigian,nhananh,url){
+                function nguoinhanhinhanh(idthoigian,tennguoinhan,thoigian,nhananh,url){
+                    socket.on('thuhoihinhanh',data =>{
+                        if(data.idthoigian===idthoigian){
+                            const c = document.createElement('a');
+                            c.textContent = `Tin nhắn đã được thu hồi`;
+                            tinnhan.replaceChild(c,imgg)
+                        }
+                    })
                     const chatItem = document.createElement('div');
                     chatItem.className=('d-flex justify-content-start mb-10');
                     const chatItem2 = document.createElement('div');
@@ -967,6 +1190,7 @@ $(function(){
                     ha_ten.append(anh);
                     ha_ten.append(tengio);
                     const tinnhan = document.createElement('div')
+                    tinnhan.id=idthoigian
                     tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                     const imgg = document.createElement('img');
                     imgg.style='width:128px;height:128px;'
@@ -984,15 +1208,15 @@ $(function(){
                  })
                  socket.on('guianh',thongtin=>{
                      console.log(thongtin);
-                     nguoinhanhinhanh(thongtin.ten,thongtin.tg_giophut,thongtin.base64,thongtin.url);
+                     nguoinhanhinhanh(thongtin.tg,thongtin.ten,thongtin.tg_giophut,thongtin.base64,thongtin.url);
                  })
                  socket.on('guifile',(file)=>{
                     //console.log(file);
-                    nguoinhanfile(file.ten,file.tg_giophut,file.tenfile,file.url,file.file,file.tenfile);
+                    nguoinhanfile(file.tg,file.ten,file.tg_giophut,file.tenfile,file.url,file.file,file.tenfile);
                 })
                 socket.on('guivideo',(file)=>{
                     //console.log(file);
-                    nguoinhanvideo(file.ten,file.tg_giophut,file.video,file.url,file.tenfile);
+                    nguoinhanvideo(file.tg,file.ten,file.tg_giophut,file.video,file.url,file.tenfile);
                 })
                    }
                    
@@ -1015,13 +1239,14 @@ $(function(){
                 for(let i=0;i<ds_user.length;i++){
                     let  ten_group = ds_user[i].map(a => a.ten_tk);
                     let  sdt_group = ds_user[i].map(a => a.sdt);
+                    let  url = ds_user[i].map(a => a.url);
                     let  ma_tk_group = ds_user[i].map(a => a.ma_tk)
                     const div_group = document.createElement('div');
                     div_group.className='d-flex flex-stack py-4 border-bottom border-gray-300 border-bottom-dashed';
                     div_group.innerHTML=`<div class="d-flex align-items-center">
                     <!--begin::Avatar-->
                     <div class="symbol symbol-35px symbol-circle">
-                        <img alt="Pic" src="/sign-in/svg/anhmacdinh.jpg">
+                        <img alt="Pic" src="${url}">
                     </div>
                     <!--end::Avatar-->
                     <!--begin::Details-->
@@ -1041,7 +1266,7 @@ $(function(){
                     div2_group.append(btn_group);
                     div_group.append(div2_group);
                     form_dsGroup.appendChild(div_group);
-
+                    
                     function addGroup_chat(){
                         div_group.remove(); 
                         const tag_form = document.querySelector('#tag');
@@ -1050,19 +1275,28 @@ $(function(){
                         tag_element.title=ten_group;
                         tag_element.value=ten_group;
                         tag_element.tabindex="-1"
-                        //  const x = document.createElement('x');
-                        //  x.className='tagify__tag__removeBtn';
-                        //  x.role='button';
-                        // tag_element.append(x);
-                        tag_element.innerHTML=`<x title="" class="tagify__tag__removeBtn" role="button" aria-label="remove tag"></x><div><span class="tagify__tag-text">${ten_group}</span></div>`;
+                         const x = document.createElement('x');
+                         x.className='tagify__tag__removeBtn';
+                         x.setAttribute('role','button')
+                         x.setAttribute('aria-label','remove tag')
+                         x.addEventListener('click',()=>{
+                             tag_element.remove();
+                         })
+                         x.role='button';
+                         const div = document.createElement('div');
+                         div.innerHTML=`<span class="tagify__tag-text">${ten_group}</span>`
+                        tag_element.append(x);
+                        tag_element.append(div);
+                        //tag_element.innerHTML=`<div><span class="tagify__tag-text">${ten_group}</span></div>`;
                         tag_form.appendChild(tag_element);
                         //lay du lieu luu xuong database
                         const tao_group = document.querySelector('#tao_room');
                         tao_group.addEventListener('click', getName_adddatabase);
 
-                        
                     }
                 }
+                
+                
                 //tao thoi gian
                 const currentdate = new Date();
                 const datatime =('0'+ currentdate.getDate()).slice(-2) +"/" +('0'+(currentdate.getMonth()+1)).slice(-2)+"/"+ currentdate.getFullYear() +" "
@@ -1075,6 +1309,7 @@ $(function(){
                    // console.log(ten_group);
                    let ds_ban = [];
                     for(let i=0; i<get_tag.length;i++){
+                        console.log(get_tag[i]);
                         get_tag[i].remove();      
                         let  ma_tk_group = ds_user[i].map(a => a.ma_tk)
                         //lay ma tai khoan 
@@ -1104,7 +1339,7 @@ $(function(){
                                     <div class="d-flex align-items-center">
                                         <!--begin::Avatar-->
                                         <div class="symbol symbol-45px symbol-circle">
-                                            <img src="/sign-in/svg/anhmacdinh.jpg">
+                                            <img src="https://detaizalo.s3.ap-southeast-1.amazonaws.com/anhgroup.png">
                                         </div>
                                         <!--end::Avatar-->
                                         <!--begin::Details-->
@@ -1170,7 +1405,7 @@ $(function(){
    
 })
 //load danh sach group
-$(function(){
+$(function(){ 
     const add_groupchat= document.querySelector('#kt_chat_contacts_body_group')
     $.ajax({
         url:'/nhomchat',
@@ -1178,10 +1413,10 @@ $(function(){
         contentType: 'application/json',
        // data : JSON.stringify({ds_group: thongtin }),
         success: function(res){   
-            const nhom_chat = res.nhomchat;  
+            var nhom_chat = res.nhomchat;  
             console.log(nhom_chat);
             for(let i=0;i<nhom_chat.length;i++){
-                const div_chatgroup = document.createElement('div');
+                var div_chatgroup = document.createElement('div');
                 div_chatgroup.className='hover scroll-y me-n5 pe-5 h-200px h-lg-auto';
                 div_chatgroup.style='max-height: 416px;';
                 div_chatgroup.addEventListener('click', chatgroup)
@@ -1190,7 +1425,7 @@ $(function(){
                 <div class="d-flex align-items-center">
                     <!--begin::Avatar-->
                     <div class="symbol symbol-45px symbol-circle">
-                        <img src="/sign-in/svg/anhmacdinh.jpg">
+                        <img src="${nhom_chat[i].urlnhom}">
                     </div>
                     <!--end::Avatar-->
                     <!--begin::Details-->
@@ -1211,35 +1446,415 @@ $(function(){
                 function chatgroup(){
                    
                       const formGroup = document.querySelector('#form_a');
-                      const div_lon = document.createElement('div');
+                      var div_lon = document.createElement('div');
                       div_lon.className='card'
                       div_lon.id='kt_chat_messenger_group'
     
                       const head_group= document.createElement('div');
                       head_group.className='card-header'
                      const head_group_title = document.createElement('div');
+                     head_group_title.className='card-title'
+                      // load modal khác  
+                     head_group_title.innerHTML=`<div data-bs-toggle="modal" data-bs-target="#kt_modal_view_users" class="symbol symbol-45px symbol-circle"><img src="${nhom_chat[i].urlnhom}"></div>
+                     <div class="d-flex justify-content-center flex-column me-3 ms-5">
+                         <a id="" href="#" data-bs-toggle="modal" data-bs-target="#kt_modal_select_users" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1">${nhom_chat[i].tennhom}</a>
+                     </div>`
                      $.ajax({
                         url:'/loadhinhanh/'+nhom_chat[i].tennhom,
                         method:'GET',
                         contentType: 'application/json',
-                        success: function(req){
-                     head_group_title.className='card-title'                       
+                        success: function(req){ 
+                            console.log(req.id);    
+                            console.log(req.id.id[0]);                 
                             const id = req.id
-                            for(let i=0;i<id.length;i++){
-                                const a = document.createElement('div');
-                            a.className='symbol-group symbol-hover'
-                            head_group_title.append(a);
-                            a.innerHTML=`
-                            <!--begin::Avatar-->
-                            <div class="symbol symbol-35px symbol-circle">
-                                <span class="symbol-label bg-light-primary text-primary 40px">${id[i].id_tk}</span>
-                            </div>
-                            <!--end::Avatar-->                          
-                       `
+                            const div_tong = document.querySelector('#modelloadtt') 
+                            const tongtinnhan = document.querySelector('#tongtinnhan')
+                            const maTK = document.querySelector('#tk_guiketban').value 
+                            
+                            for(let i=0;i<id.id.length;i++){
+                                tongtinnhan.textContent=id.tatcatinnhan[0].tongtn;
+                               // if(id.id[i].id_chuphong===id.id[i].id_tk){
+                                    const div = document.createElement('div');
+                                    div.className='border border-hover-primary p-7 rounded'
+                                    const div_thongtin = document.createElement('div');
+                                    div_thongtin.className='d-flex flex-stack pb-3'
+                                  
+                                    div_thongtin.innerHTML=`<div class="d-flex">
+                                    <!--begin::Avatar-->
+                                    <div class="symbol symbol-circle symbol-45px">
+                                        <img src="${id.id[i].url}" alt="">
+                                    </div>
+                                    <!--end::Avatar-->
+                                    <!--begin::Details-->
+                                    <div class="ms-5">
+                                        <!--begin::Name-->
+                                        <div class="d-flex align-items-center">
+                                            <a href="" class="text-dark fw-bolder text-hover-primary fs-5 me-4">${id.id[i].ten_tk}</a>
+                                            <!--begin::Label-->
+                                            <span class="m-0"></span>
+                                            <!--end::Label-->
+                                        </div>
+                                        <!--end::Name-->
+                                        <!--begin::Desc-->
+                                        <span class="text-muted fw-bold mb-3">${id.id[i].sdt}</span>
+                                        <!--end::Desc-->
+                                    </div>
+                                    <!--end::Details-->
+                                </div>
+                                <div clas="d-flex">
+                                            <!--begin::Price-->
+                                            <div class="text-end pb-3">
+                                                <span class="text-dark fw-bolder fs-5">${id.id[i].sotinnhan}</span>
+                                                <span class="text-muted fs-7">tin nhắn</span>
+                                            </div>
+                                            <!--end::Price-->
+                                        </div>`
+                                   
+                                    const div_xoa = document.createElement('div');
+                                    div_xoa.className='p-0'
+                                   
+                                    const div_ten = document.createElement('div');
+                                    div_ten.className='d-flex flex-column'
+                                    const div_tentrong = document.createElement('div');
+                                    div_tentrong.className='d-flex flex-stack'
+                                    const p_ten = document.createElement('p');
+                                    p_ten.className='text-gray-700 fw-bold fs-6 mb-4'
+                                    if(id.id[i].id_chuphong===id.id[i].id_tk){
+                                    p_ten.textContent='Người Tạo Phòng'
+                                    }
+                                    else{
+                                    p_ten.textContent='Thành Viên'
+                                    }
+                                    div_tentrong.append(p_ten)
+                                    var select = document.createElement('select');
+                                    select.id='luachon'
+                                     if(id.id[i].ma_tk=== parseInt(maTK)){  
+                                        select.className=' form-select-sm form-select-solid'
+                                        var op = document.createElement('option');
+                                        op.value='null'
+                                        op.selected=true
+                                        var op1 = document.createElement('option');
+                                        op1.value='them'
+                                        select.append(op)
+                                        select.append(op1)
+                                        if(id.id[i].id_chuphong===id.id[i].id_tk){
+                                            const op2 = document.createElement('option');
+                                            op2.value='xoa'
+                                            const op3 = document.createElement('option');
+                                            op3.value='kich'
+                                            op1.textContent='Thêm'
+                                            
+                                            op2.textContent='Xóa Nhóm'
+                                            op3.textContent='Kích'
+                                            select.append(op2)
+                                            select.append(op3)
+                                        }
+                                        else{
+                                            op1.textContent='Thêm'
+                                            const op4= document.createElement('option');
+                                            op4.textContent='Rời nhóm'
+                                            op4.value='roinhom'
+                                            select.append(op4)
+                                        }  
+                                        div_tentrong.append(select)
+                                    }
+                                    select.addEventListener('change',thaydoi);
+                                    
+                                    div_ten.append(div_tentrong)
+                                    div_xoa.append(div_ten)
+
+                                    div.append(div_thongtin)
+                                    div.append(div_xoa)
+                                    div_tong.appendChild(div)
+                                
+                            }
+                            function thaydoi(){                          
+                                const luachon = document.querySelector('#luachon').value;
+                                if(luachon==='them'){
+                                    const modal = document.getElementById('modalmoiban');
+                                    const thoat = document.querySelector('#thoatmodal');
+                                    $('#modalmoiban').modal('show')
+                                     //load ds ban be chua vao nhóm
+                                     const id_nhom = nhom_chat[i].id_nhom;
+                                     const form_dsban = document.querySelector('#dsbanchuathemgroup');
+                                     $.ajax({
+                                        url:'/dsbanbechuavaonhom/'+nhom_chat[i].tennhom,
+                                        method:'GET',
+                                        contentType: 'application/json',
+                                        success: function(req){ 
+                                            const ds = req.ds_banbe ;                      
+                                            for(let i=0;i<ds.length;i++){
+                                                const  url= ds[i].map(a => a.url);
+                                                const  ten= ds[i].map(a => a.ten_tk);
+                                                const  sdt= ds[i].map(a => a.sdt);
+                                                const  ma= ds[i].map(a => a.ma_tk);
+                                                const a = document.createElement('a')
+                                                a.className='d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1'
+                                                const div1 =document.createElement('div')
+                                                div1.className='symbol symbol-35px symbol-circle me-5'
+                                                div1.innerHTML=`<img alt="Pic" src="${url}">`
+                                                const div2 =document.createElement('div')
+                                                div2.className='fw-bold'
+                                                div2.innerHTML=`<span class="fs-6 text-gray-800 me-2">${ten}</span>
+                                                <span class="badge badge-light">${sdt}</span>`
+
+                                                const div3 =document.createElement('div')
+                                                div3.className='btn-group btn-group-sm'
+                                                div3.style='margin-left:auto'
+                                                div3.setAttribute('role','group')
+                                                const btn =document.createElement('button')
+                                                btn.className='btn'
+                                                btn.addEventListener('click',(e)=>{
+                                                    e.preventDefault();
+                                                    const currentdate = new Date();
+                                                    const datatime =('0'+ currentdate.getDate()).slice(-2) +"/" +('0'+(currentdate.getMonth()+1)).slice(-2)+"/"+ currentdate.getFullYear() +" "
+                                                    + ('0'+currentdate.getHours()).slice(-2)+":" + ('0'+currentdate.getMinutes()).slice(-2)+":"+ ('0'+currentdate.getSeconds()).slice(-2);
+                                                        const thongtin = {
+                                                            "id_tk":ma,
+                                                            "id_nhom":id_nhom,
+                                                            "thoigian":datatime,
+                                                        }
+                                                        $.ajax({
+                                                            url:'/thembanvaogroup',
+                                                            method:'POST',
+                                                            contentType: 'application/json',
+                                                            data : JSON.stringify({thongtin: thongtin }),
+                                                            success: function(res){
+                                                                const b = res.data
+                                                                if(b==='thanhcong'){
+                                                                    toastr.options = {                                        
+                                                                        "progressBar": true,
+                                                                        "positionClass": "toastr-top-right",
+                                                                        "showDuration": "300",
+                                                                        "hideDuration": "1000",
+                                                                        "timeOut": "2000",
+                                                                        "extendedTimeOut": "1000",
+                                                                        "showEasing": "swing",
+                                                                        "hideEasing": "linear",
+                                                                        "showMethod": "fadeIn",
+                                                                        "hideMethod": "fadeOut"
+                                                                      };
+                                                                    toastr.success("Thêm Bạn Vào Group Thành Công");
+                                                                    a.remove();
+                                                                }
+                                                                
+                                                            }
+                                                        })   
+                                                })
+                                                btn.innerHTML=`<i class="bi bi-plus-circle" style="font-size: 1.5rem; color: black"></i>`
+                                                div3.append(btn);
+
+                                                a.appendChild(div1)
+                                                a.appendChild(div2)
+                                                a.appendChild(div3)
+                                                form_dsban.appendChild(a)
+                                            }
+                                           
+                                        }
+                                    }) 
+                                    thoat.onclick = function() {
+                                        modal.style.display = "none";
+                                        location.reload()
+                                        //div_lon.remove()
+                                    }
+                                    window.onclick = function(event) {
+                                        if (event.target == modal) {
+                                            modal.style.display = "none";
+                                            location.reload()
+                                            //div_lon.remove()
+                                        }
+                                      }
+                                      
+                                 //quay lại lựa chọn
+                                 op.selected=true;
+                                }   
+                                if(luachon==='xoa'){
+                                    $.ajax({
+                                        url:'/xoagroup',
+                                        method:'POST',
+                                        contentType: 'application/json',
+                                        data : JSON.stringify({thongtin: nhom_chat[i].id_nhom }),
+                                        success: function(res){
+                                            const b = res.data
+                                            if(b==='thanhcong'){
+                                                toastr.options = {                                        
+                                                    "progressBar": true,
+                                                    "positionClass": "toastr-top-right",
+                                                    "showDuration": "300",
+                                                    "hideDuration": "1000",
+                                                    "timeOut": "2000",
+                                                    "extendedTimeOut": "1000",
+                                                    "showEasing": "swing",
+                                                    "hideEasing": "linear",
+                                                    "showMethod": "fadeIn",
+                                                    "hideMethod": "fadeOut"
+                                                  };
+                                                toastr.success("Xóa Nhóm Thành Công");
+                                                $('#kt_modal_select_users').modal('hide')
+                                                div_lon.remove()
+                                                div_chatgroup.remove();
+                                                
+                                            }
+                                        }
+                                    })
+                                }
+                                if(luachon==='kich'){
+                                    const modalkich = document.querySelector('#modalkichban')
+                                    const nhanx = document.querySelector('#id_kichban')
+                                    $('#modalkichban').modal('show')
+                                    $.ajax({
+                                        url:'/loaddsgroup/'+nhom_chat[i].tennhom,
+                                        method:'GET',
+                                        contentType: 'application/json',
+                                        success: function(req){ 
+                                            const ds = req.id
+                                            const form = document.querySelector('#dsbanmuonkich');
+                                            form.className='mh-375px scroll-y me-n7 pe-7'
+                                            for(let i=0;i<ds.length;i++){
+                                                const aa = document.createElement('a')
+                                                aa.className='d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1'
+                                                const div1 =document.createElement('div')
+                                                div1.className='symbol symbol-35px symbol-circle me-5'
+                                                div1.innerHTML=`<img alt="Pic" src="${ds[i].url}">`
+                                                const div2 =document.createElement('div')
+                                                div2.className='fw-bold'
+                                                div2.innerHTML=`<span class="fs-6 text-gray-800 me-2">${ds[i].ten_tk}</span>
+                                                <span class="badge badge-light">${ds[i].sdt}</span>`
+
+                                                const div3 =document.createElement('div')
+                                                div3.className='btn-group btn-group-sm'
+                                                div3.style='margin-left:auto'
+                                                div3.setAttribute('role','group')
+                                                const btn =document.createElement('button')
+                                                btn.className='btn'
+                                                btn.addEventListener('click',function kich(e) {
+                                                    e.preventDefault()
+                                                    const thongtin={
+                                                        id_tk:ds[i].ma_tk,
+                                                        id_nhom:ds[i].id_nhom,
+                                                    }
+                                                    $.ajax({
+                                                        url:'/kichban',
+                                                        method:'POST',
+                                                        contentType: 'application/json',
+                                                        data : JSON.stringify({thongtin: thongtin }),
+                                                        success: function(res){
+                                                            const b = res.data
+                                                            if(b==='thanhcong'){
+                                                                toastr.options = {                                        
+                                                                    "progressBar": true,
+                                                                    "positionClass": "toastr-top-right",
+                                                                    "showDuration": "300",
+                                                                    "hideDuration": "1000",
+                                                                    "timeOut": "2000",
+                                                                    "extendedTimeOut": "1000",
+                                                                    "showEasing": "swing",
+                                                                    "hideEasing": "linear",
+                                                                    "showMethod": "fadeIn",
+                                                                    "hideMethod": "fadeOut"
+                                                                  };
+                                                                toastr.success("Kích Bạn Thành Công");
+                                                                aa.remove();
+                                                            }
+                                                            
+                                                        }
+                                                    })  
+                                                    
+                                                })
+                                                btn.innerHTML=`<i class="bi bi-x text-danger fs-3" style="font-size: 1.5rem; color: black"></i>`
+                                                div3.append(btn);
+
+                                                aa.appendChild(div1)
+                                                aa.appendChild(div2)
+                                                aa.appendChild(div3)
+                                                
+                                                form.appendChild(aa);
+                                        }
+
+                                        }
+                                    })
+                                    nhanx.onclick = function() {
+                                        modalkich.style.display = "none";
+                                        location.reload()
+                                        //div_lon.remove()
+                                    }
+                                    window.onclick = function(event) {
+                                        if (event.target == modalkich) {
+                                            modalkich.style.display = "none";
+                                            location.reload()
+                                            //div_lon.remove()
+                                        }
+                                      }
+                                    //quay lại lựa chọn
+                                    op.selected=true;
+                                }
+                                if(luachon==='roinhom'){
+                                    $.ajax({
+                                        url:'/roigroup',
+                                        method:'POST',
+                                        contentType: 'application/json',
+                                        data : JSON.stringify({thongtin: nhom_chat[i].id_nhom }),
+                                        success: function(res){
+                                            const tc = res.data
+                                            if(tc==='thanhcong'){
+                                                toastr.options = {                                        
+                                                    "progressBar": true,
+                                                    "positionClass": "toastr-top-center",
+                                                    "showDuration": "300",
+                                                    "hideDuration": "1000",
+                                                    "timeOut": "2000",
+                                                    "extendedTimeOut": "1000",
+                                                    "showEasing": "swing",
+                                                    "hideEasing": "linear",
+                                                    "showMethod": "fadeIn",
+                                                    "hideMethod": "fadeOut"
+                                                  };
+                                                toastr.success("Bạn đã rời nhóm");
+                                                $('#kt_modal_select_users').modal('hide')
+                                                div_lon.remove()
+                                                div_chatgroup.remove();
+                                            }
+                                        }
+                                    })        
+                                   
+                                }
+                            
                             }
                         }
                     })
-                   
+                    //modal sua thong tin nhomchat
+                    const anhnhomchat = document.querySelector('#anhnhomchat') 
+                    anhnhomchat.style.backgroundImage=`url("${nhom_chat[i].urlnhom}")`                 
+                    const tennhomchat = document.querySelector('#tennhomchat')
+                    tennhomchat.value=nhom_chat[i].tennhom
+                    document.querySelector('#suathongtin').addEventListener('click',function(e) {
+                        const fileanh = document.querySelector('#layanh').files[0];
+                        e.preventDefault();
+                       const reader = new FileReader();
+                       reader.readAsDataURL(fileanh);
+                       reader.onload=function (e){
+                           const thongtin={
+                               id_nhom:nhom_chat[i].id_nhom,
+                               urlnhom:e.target.result,
+                               tennhom:nhom_chat[i].tennhom,
+                               id_chuphong:nhom_chat[i].id_chuphong
+                           }
+                           $.ajax({
+                               url:'/capnhatanhchogroup',
+                               method:'POST',
+                               contentType: 'application/json',
+                               data : JSON.stringify({thongtin_update: thongtin }),
+                               success: function(res){
+                                   const a = res.data
+                                   if(a==='thanhcong')
+                                   {
+                                       window.location.reload(true);
+                                   }
+                               }
+                           })
+                       }
+                       
+                    })
                      const head_group_toobar = document.createElement('div');
                      head_group_toobar.className='card-toolbar'
                      head_group_toobar.innerHTML=`<div class="me-n3">
@@ -1378,7 +1993,7 @@ $(function(){
                             }
                             socket.emit("guianh_group",nhom_chat[i].tennhom,thongtin1);
                            
-                           nguoiguihinhanhgroup(tentk,gio_phut_group,e.target.result,url_idmy)
+                           nguoiguihinhanhgroup(nhom_chat[i].tennhom,datatime_group,tentk,gio_phut_group,e.target.result,url_idmy)
                            
                         }
                         reader.readAsDataURL(selector.files[0]);
@@ -1424,7 +2039,7 @@ $(function(){
                         "id_nhom":nhom_chat[i].id_nhom
                         }
                         socket.emit("guifilegroup",nhom_chat[i].tennhom,thongtin);
-                         nguoiguifilegroup(tentk,gio_phut_group,tailieu.name,url_idmy,e.target.result,tailieu.name)
+                         nguoiguifilegroup(nhom_chat[i].tennhom,datatime_group,tentk,gio_phut_group,tailieu.name,url_idmy,e.target.result,tailieu.name)
                      }
                      reader.readAsDataURL(tailieu);   
                 })
@@ -1446,7 +2061,7 @@ $(function(){
                         "id_nhom":nhom_chat[i].id_nhom
                         }
                         socket.emit("guivideogroup",nhom_chat[i].tennhom,thongtin);
-                         nguoiguivideogroup(tentk,gio_phut_group,e.target.result,url_idmy,style);
+                         nguoiguivideogroup(nhom_chat[i].tennhom,datatime_group,tentk,gio_phut_group,e.target.result,url_idmy,style);
                      }
                      reader.readAsDataURL(video);   
                 })
@@ -1465,16 +2080,16 @@ $(function(){
                                   if(thongtin[i].loaitinnhan==='vanban' && thongtin[i].trangthai==='hoạt động'){
                                     nguoigui(thongtin[i].tennhom,thoigian_nguoiguigroup,thongtin[i].ten_tk,gio_phutnguoiguigroup,thongtin[i].noidung,thongtin[i].url);
                                   }
-                                  else if(thongtin[i].loaitinnhan==='hinhanh'&& thongtin[i].trangthai==='hoạt động'){
-                                      nguoiguihinhanhgroup(thongtin[i].ten_tk,gio_phutnguoiguigroup,thongtin[i].noidung,thongtin[i].url);
+                                  else if(thongtin[i].loaitinnhan==='hinhanh' && thongtin[i].trangthai==='hoạt động'){
+                                      nguoiguihinhanhgroup(thongtin[i].tennhom,thoigian_nguoiguigroup,thongtin[i].ten_tk,gio_phutnguoiguigroup,thongtin[i].noidung,thongtin[i].url);
                                   }
-                                  else if(thongtin[i].loaitinnhan==='file'&& thongtin[i].trangthai==='hoạt động'){
+                                  else if(thongtin[i].loaitinnhan==='file' && thongtin[i].trangthai==='hoạt động'){
                                       const duongdan= thongtin[i].noidung.split(';');
-                                    nguoiguifilegroup(thongtin[i].ten_tk,gio_phutnguoiguigroup,duongdan[1],thongtin[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);
+                                    nguoiguifilegroup(thongtin[i].tennhom,thoigian_nguoiguigroup,thongtin[i].ten_tk,gio_phutnguoiguigroup,duongdan[1],thongtin[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);
                                 }
                                 else if(thongtin[i].loaitinnhan==='video'&& thongtin[i].trangthai==='hoạt động'){
                                     const duongdan= thongtin[i].noidung.split(';');
-                                  nguoiguivideogroup(thongtin[i].ten_tk,gio_phutnguoiguigroup,duongdan[0],thongtin[i].url,duongdan[1]);
+                                  nguoiguivideogroup(thongtin[i].tennhom,thoigian_nguoiguigroup,thongtin[i].ten_tk,gio_phutnguoiguigroup,duongdan[0],thongtin[i].url,duongdan[1]);
                               }
 
                             }
@@ -1485,16 +2100,16 @@ $(function(){
                                     nguoinhan(thoigian_nguoinhangroup,thongtin[i].ten_tk,gio_phutnguoinhangroup,thongtin[i].noidung,thongtin[i].url);
                                 }
                                 else if(thongtin[i].loaitinnhan==='hinhanh'&& thongtin[i].trangthai==='hoạt động'){
-                                    nguoinhanhinhanhgroup(thongtin[i].ten_tk,gio_phutnguoinhangroup,thongtin[i].noidung,thongtin[i].url);
+                                    nguoinhanhinhanhgroup(thoigian_nguoinhangroup,thongtin[i].ten_tk,gio_phutnguoinhangroup,thongtin[i].noidung,thongtin[i].url);
                                 }
                                 else if(thongtin[i].loaitinnhan==='file'&& thongtin[i].trangthai==='hoạt động'){
                                     const duongdan= thongtin[i].noidung.split(';');
-                                    nguoinhanfilegroup(thongtin[i].ten_tk,gio_phutnguoinhangroup,duongdan[1],thongtin[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);                               
+                                    nguoinhanfilegroup(thoigian_nguoinhangroup,thongtin[i].ten_tk,gio_phutnguoinhangroup,duongdan[1],thongtin[i].url,`${duongdan[0]}${duongdan[2]}`,duongdan[1]);                               
                                 
                                 }
                                 else if(thongtin[i].loaitinnhan==='video'&& thongtin[i].trangthai==='hoạt động'){
                                     const duongdan= thongtin[i].noidung.split(';');
-                                    nguoinhanvideogroup(thongtin[i].ten_tk,gio_phutnguoinhangroup,duongdan[0],thongtin[i].url,duongdan[1]);                               
+                                    nguoinhanvideogroup(thoigian_nguoinhangroup,thongtin[i].ten_tk,gio_phutnguoinhangroup,duongdan[0],thongtin[i].url,duongdan[1]);                               
                                 
                                 }
                             }
@@ -1505,9 +2120,10 @@ $(function(){
                     }
                    })
                  
-                   function nguoiguivideogroup(tennguoinhan,thoigian,noidung,url,type){
+                   function nguoiguivideogroup(tengroup,idthoigiangroup,tennguoinhan,thoigian,noidung,url,type){
                     const div_khungtong = document.querySelector('#loadtinnhan_nhom')
                     const div = document.createElement('div');
+                    div.id=tengroup
                     div.className=('d-flex justify-content-end mb-10');
                     const div2 = document.createElement('div');
                     div2.className = ('d-flex flex-column align-items-end');
@@ -1534,6 +2150,7 @@ $(function(){
                     div3.append(div3_1);
                     div3.append(div3_2);
                     const div4 = document.createElement('div');
+                    div4.id=idthoigiangroup
                     div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
                     const video = document.createElement('video');
                     video.height='200';
@@ -1543,15 +2160,58 @@ $(function(){
                     srouch.src=noidung;
                     srouch.type=type;
                     video.append(srouch);
+                    div4.append(video);
+                    const div46 = document.createElement('div');
+                    div46.className='d-flex align-items-center mb-2 overlay'
+                    const div6 = document.createElement('div');
+                    const div6_1 = document.createElement('div');
+                    div6_1.className='me-3 overlay-layer';
+                    div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    <i class="bi bi-three-dots fs-3"></i>
+                </button>`
+                    div6.append(div6_1)
+                    div6_1.addEventListener('click', function thuhoi(e){
+                        e.preventDefault();
+                        var x = document.createElement("SELECT");
+                        x.id='mySelect';
+                        x.className='overlay-layer';
+                        var z = document.createElement("option");
+                        z.value='thu hồi'
+                        var t = document.createTextNode("Thu hồi");
+                        x.addEventListener('click',function thuhoitinnhan(e){
+                            e.preventDefault();
+                            let b= document.querySelector('#mySelect').value;
+                            if(b==='thu hồi'){
+                                const c = document.createElement('a');
+                                c.textContent = `Tin nhắn đã được thu hồi`;
+                                div4.replaceChild(c,video)
+                            }
+                            socket.emit('thuhoivideogroup',tengroup,idthoigiangroup);
+                        })
+                        var z1 = document.createElement("option");
+                        var t1 = document.createTextNode("");
+                        z1.value='null'
+                        z1.selected=true;
+                        
+                        z.appendChild(t);
+                        z1.appendChild(t1);
+                        x.append(z1)
+                        x.append(z)
+                        div6.append(x);
+                    })
+                    div46.append(div6)
+                    div46.append(div4)
+
+
                     div.append(div2);
                     div2.append(div3);
-                    div2.append(div4);
-                    div4.append(video);
+                    div2.append(div46);
+                   
                     
                     div_khungtong.appendChild(div);
                     div_khungtong.scrollTop = div_khungtong.scrollHeight;
                 }
-                function nguoinhanvideogroup(tennguoigui,thoigian,noidung,url,type){
+                function nguoinhanvideogroup(idthoigian,tennguoigui,thoigian,noidung,url,type){
                     const div_khungtong = document.querySelector('#loadtinnhan_nhom')
                     const chatItem = document.createElement('div');
                     chatItem.className=('d-flex justify-content-start mb-10');
@@ -1577,6 +2237,7 @@ $(function(){
                     ha_ten.append(anh);
                     ha_ten.append(tengio);
                     const tinnhan = document.createElement('div')
+                    tinnhan.id=idthoigian
                     tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                     const video = document.createElement('video');
                     video.height='200';
@@ -1593,9 +2254,17 @@ $(function(){
                     div_khungtong.appendChild(chatItem);
                     // scroll down
                     div_khungtong.scrollTop = div_khungtong.scrollHeight;
+                    socket.on('thuhoivideogroup',data=>{
+                        if(data===idthoigian){
+                           const c = document.createElement('a');
+                           c.textContent = `Tin nhắn đã được thu hồi`;
+                           tinnhan.replaceChild(c,video)
+                        }
+                    })   
                 }
-                   function nguoinhanhinhanhgroup(tennguoinhan,thoigian,nhananh,url){
+                   function nguoinhanhinhanhgroup(idthoigian,tennguoinhan,thoigian,nhananh,url){
                     const div_khungtong = document.querySelector('#loadtinnhan_nhom')
+
                     const chatItem = document.createElement('div');
                     chatItem.className=('d-flex justify-content-start mb-10');
                     const chatItem2 = document.createElement('div');
@@ -1620,6 +2289,7 @@ $(function(){
                     ha_ten.append(anh);
                     ha_ten.append(tengio);
                     const tinnhan = document.createElement('div')
+                    tinnhan.id=idthoigian;
                     tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                     const imgg = document.createElement('img');
                     imgg.style='width:128px;height:128px;'
@@ -1631,10 +2301,18 @@ $(function(){
                     div_khungtong.appendChild(chatItem);
                     // scroll down
                     div_khungtong.scrollTop = div_khungtong.scrollHeight;
+                    socket.on('thuhoihinhanhgroup',data=>{
+                        if(data===idthoigian){
+                           const c = document.createElement('a');
+                           c.textContent = `Tin nhắn đã được thu hồi`;
+                           tinnhan.replaceChild(c,imgg)
+                        }
+                    })   
                 }
-                   function nguoiguihinhanhgroup(tennguoigui,thoigian,anh,url){
+                   function nguoiguihinhanhgroup(tengroup,idthoigiangroup,tennguoigui,thoigian,anh,url){
                     const div_khungtong = document.querySelector('#loadtinnhan_nhom')
                     const div = document.createElement('div');
+                    div.id=tengroup;
                     div.className=('d-flex justify-content-end mb-10');
                     const div2 = document.createElement('div');
                     div2.className = ('d-flex flex-column align-items-end');
@@ -1661,14 +2339,57 @@ $(function(){
                     div3.append(div3_1);
                     div3.append(div3_2);
                     const div4 = document.createElement('div');
+                    div4.id=idthoigiangroup
                     div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
                     const imgg = document.createElement('img');
                     imgg.style='width:128px;height:128px;'
-                    div.append(div2);
-                    div2.append(div3);
-                    div2.append(div4);
                     div4.append(imgg);
                     imgg.src = anh;
+                    const div46 = document.createElement('div');
+                         div46.className='d-flex align-items-center mb-2 overlay'
+                         const div6 = document.createElement('div');
+                         const div6_1 = document.createElement('div');
+                         div6_1.className='me-3 overlay-layer';
+                         div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                         <i class="bi bi-three-dots fs-3"></i>
+                     </button>`
+                         div6.append(div6_1)
+                         div6_1.addEventListener('click', function thuhoi(e){
+                             e.preventDefault();
+                             var x = document.createElement("SELECT");
+                             x.id='mySelect';
+                             x.className='overlay-layer';
+                             var z = document.createElement("option");
+                             z.value='thu hồi'
+                             var t = document.createTextNode("Thu hồi");
+                             x.addEventListener('click',function thuhoitinnhan(e){
+                                 e.preventDefault();
+                                 let b= document.querySelector('#mySelect').value;
+                                 if(b==='thu hồi'){
+                                     const c = document.createElement('a');
+                                     c.textContent = `Tin nhắn đã được thu hồi`;
+                                     div4.replaceChild(c,imgg)
+                                 }
+                                 socket.emit('thuhoihinhanhgroup',tengroup,idthoigiangroup);
+                             })
+                             var z1 = document.createElement("option");
+                             var t1 = document.createTextNode("");
+                             z1.value='null'
+                             z1.selected=true;
+                         
+                             z.appendChild(t);
+                             z1.appendChild(t1);
+                             x.append(z1)
+                             x.append(z)
+                             div6.append(x);
+                         })
+                         div46.append(div6)
+                         div46.append(div4)
+
+                    div.append(div2);
+                    div2.append(div3);
+                    div2.append(div46);
+                   
                     div_khungtong.appendChild(div);
                     div_khungtong.scrollTop = div_khungtong.scrollHeight;   
                 } 
@@ -1736,7 +2457,8 @@ $(function(){
                              })
                              var z1 = document.createElement("option");
                              var t1 = document.createTextNode("");
-                         
+                             z1.value='null'
+                                z1.selected=true;
                              z.appendChild(t);
                              z1.appendChild(t1);
                              x.append(z1)
@@ -1796,9 +2518,10 @@ $(function(){
                             }
                         })
                      }
-                     function nguoiguifilegroup(tennguoinhan,thoigian,noidung,url,link,tendownload){
+                     function nguoiguifilegroup(tengroup,idthoigiangroup,tennguoinhan,thoigian,noidung,url,link,tendownload){
                         const div_khungtong = document.querySelector('#loadtinnhan_nhom')
                         const div = document.createElement('div');
+                        div.id=tengroup
                         div.className=('d-flex justify-content-end mb-10');
                         const div2 = document.createElement('div');
                         div2.className = ('d-flex flex-column align-items-end');
@@ -1825,19 +2548,62 @@ $(function(){
                         div3.append(div3_1);
                         div3.append(div3_2);
                         const div4 = document.createElement('div');
+                        div4.id=idthoigiangroup
                         div4.className=('p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end');
                         const a = document.createElement('a');
                         a.href=link;
                         a.download=tendownload;
+                        div4.append(a);
+                        const div46 = document.createElement('div');
+                        div46.className='d-flex align-items-center mb-2 overlay'
+                        const div6 = document.createElement('div');
+                        const div6_1 = document.createElement('div');
+                        div6_1.className='me-3 overlay-layer';
+                        div6_1.innerHTML=`<button class="btn btn-sm btn-icon  btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                        <i class="bi bi-three-dots fs-3"></i>
+                    </button>`
+                        div6.append(div6_1)
+                        div6_1.addEventListener('click', function thuhoi(e){
+                            e.preventDefault();
+                            var x = document.createElement("SELECT");
+                            x.id='mySelect';
+                            x.className='overlay-layer';
+                            var z = document.createElement("option");
+                            z.value='thu hồi'
+                            var t = document.createTextNode("Thu hồi");
+                            x.addEventListener('click',function thuhoitinnhan(e){
+                                e.preventDefault();
+                                let b= document.querySelector('#mySelect').value;
+                                if(b==='thu hồi'){
+                                    const c = document.createElement('a');
+                                    c.textContent = `Tin nhắn đã được thu hồi`;
+                                    div4.replaceChild(c,a)
+                                }
+                                socket.emit('thuhoifilegroup',tengroup,idthoigiangroup);
+                            })
+                            var z1 = document.createElement("option");
+                            var t1 = document.createTextNode("");
+                            z1.value='null'
+                             z1.selected=true;
+                        
+                            z.appendChild(t);
+                            z1.appendChild(t1);
+                            x.append(z1)
+                            x.append(z)
+                            div6.append(x);
+                        })
+                        div46.append(div6)
+                        div46.append(div4)
+
                         div.append(div2);
                         div2.append(div3);
-                        div2.append(div4);
-                        div4.append(a);
+                        div2.append(div46);
+                       
                         a.textContent = noidung;
                         div_khungtong.appendChild(div);
                         div_khungtong.scrollTop = div_khungtong.scrollHeight;
                     }
-                    function nguoinhanfilegroup(tennguoigui,thoigian,noidung,url,linktai,tendownload){
+                    function nguoinhanfilegroup(idthoigian,tennguoigui,thoigian,noidung,url,linktai,tendownload){
                         const div_khungtong = document.querySelector('#loadtinnhan_nhom')
                         const chatItem = document.createElement('div');
                         chatItem.className=('d-flex justify-content-start mb-10');
@@ -1863,6 +2629,7 @@ $(function(){
                         ha_ten.append(anh);
                         ha_ten.append(tengio);
                         const tinnhan = document.createElement('div')
+                        tinnhan.id=idthoigian
                         tinnhan.className=('p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start');
                         const tin = document.createElement('a');
                         tin.href=linktai;
@@ -1875,6 +2642,13 @@ $(function(){
                         div_khungtong.appendChild(chatItem);
                         // scroll down
                         div_khungtong.scrollTop = div_khungtong.scrollHeight;
+                        socket.on('thuhoifilegroup',data=>{
+                            if(data===idthoigian){
+                               const c = document.createElement('a');
+                               c.textContent = `Tin nhắn đã được thu hồi`;
+                               tinnhan.replaceChild(c,tin)
+                            }
+                        })   
                     }
 
                      socket.on("chatgroup",data=>{
@@ -1883,15 +2657,15 @@ $(function(){
                     })
                     socket.on("guianh_group",data=>{
                       //console.log(data);
-                      nguoinhanhinhanhgroup(data.ten_nguoigui,data.thoigian_hienthi,data.base64,data.url);
+                      nguoinhanhinhanhgroup(data.thoigian_database,data.ten_nguoigui,data.thoigian_hienthi,data.base64,data.url);
                      })
                      socket.on("guifilegroup",data=>{
                         //console.log(data);
-                        nguoinhanfilegroup(data.ten_nguoigui,data.thoigian_hienthi,data.tenfile,data.url,data.file,data.tenfile);
+                        nguoinhanfilegroup(data.thoigian_database,data.ten_nguoigui,data.thoigian_hienthi,data.tenfile,data.url,data.file,data.tenfile);
                        })
                        socket.on("guivideogroup",data=>{
                         //console.log(data);
-                        nguoinhanvideogroup(data.ten_nguoigui,data.thoigian_hienthi,data.video,data.url,data.style);
+                        nguoinhanvideogroup(data.thoigian_database,data.ten_nguoigui,data.thoigian_hienthi,data.video,data.url,data.style);
                        })
                       
                  }

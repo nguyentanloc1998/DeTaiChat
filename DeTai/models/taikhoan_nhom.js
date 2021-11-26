@@ -29,6 +29,16 @@ module.exports={
         }
         return db.del(table,condition);
     },
+    deldel: function(id_tk,id_nhom){
+        const condition1={
+            id_tk:id_tk,
+        }
+        const condition2={
+            id_nhom:id_nhom
+        }
+       
+        return db.deldel(table,condition1,condition2);
+    },
     singlebytkbytennhom:async function(matk){
        const row= await db.load(` select * from ${table} inner join nhom on taikhoan_nhom.id_nhom =  nhom.id_nhom where id_tk= '${matk}' group by tennhom`);
        if(row.length===0){
@@ -44,7 +54,7 @@ module.exports={
         return row;
      },
      loadidtennhom:async function(tennhom){
-        const row= await db.load(` select * from ${table} inner join taikhoan on taikhoan_nhom.id_tk = taikhoan.ma_tk inner join nhom on taikhoan_nhom.id_nhom =  nhom.id_nhom where tennhom= '${tennhom}' group by id_tk`);
+        const row= await db.load(` select *, count(noidung) as sotinnhan from ${table} inner join taikhoan on taikhoan_nhom.id_tk = taikhoan.ma_tk inner join nhom on taikhoan_nhom.id_nhom =  nhom.id_nhom where tennhom= '${tennhom}' group by id_tk `);
         if(row.length===0){
             return null;
         }
@@ -59,6 +69,13 @@ module.exports={
      },
      loadalltinnhan:async function(tennhom){
         const row= await db.load(` select * from ${table} inner join taikhoan on taikhoan_nhom.id_tk = taikhoan.ma_tk inner join nhom on taikhoan_nhom.id_nhom =  nhom.id_nhom where tennhom= '${tennhom}' order by thoigian asc`);
+        if(row.length===0){
+            return null;
+        }
+        return row;
+     },
+     demtinnhantatca:async function(tennhom){
+        const row= await db.load(` select count(taikhoan_nhom.noidung) as tongtn from ${table} inner join taikhoan on taikhoan_nhom.id_tk = taikhoan.ma_tk inner join nhom on taikhoan_nhom.id_nhom =  nhom.id_nhom where tennhom= '${tennhom}' and trangthai='hoạt động' group by tennhom`);
         if(row.length===0){
             return null;
         }

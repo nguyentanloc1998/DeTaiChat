@@ -30,29 +30,139 @@ router.get('/dangky',async (req,res)=>{
 router.get('/thongtin',async(req,res)=>{
     const soban = await table_banbe.dembanbe(req.session.AuthUser.ma_tk);
     const sonhom = await table_tk_nhom.demsonhom(req.session.AuthUser.ma_tk);
-    let a=0;
-    for(let i= 0;i<sonhom.length;i++){
-        a++
-    }
-    console.log(a);
-    console.log(soban);
-    const data={soban:soban,sonhom:a};
-    console.log(data);
-    res.render('thongtin-user',{data:data});
+   
+    let a=0
+    console.log(soban);;
+    if(sonhom ===null ){
+        if(soban===null){
+            const mang =[];
+            const tt={
+                id_tk:req.session.AuthUser.ma_tk,
+                sobanbe:0
+            }
+            mang.push(tt);
+            const data={soban:mang,sonhom:0};
+            res.render('thongtin-user',{data:data});
+        }
+        else{
+            const data={soban:soban,sonhom:0};
+            res.render('thongtin-user',{data:data});
+        }
+    } 
+    else{
+        if(soban===null){
+            const mang =[];
+            for(let i= 0;i<sonhom.length;i++){
+                a++
+            }
+            const tt={
+                id_tk:req.session.AuthUser.ma_tk,
+                sobanbe:0
+            }
+            mang.push(tt);
+            const data={soban:mang,sonhom:a};
+            res.render('thongtin-user',{data:data});
+        }
+        else{
+            for(let i= 0;i<sonhom.length;i++){
+                a++
+            }
+            console.log(a);
+            console.log(soban);
+           
+            const data={soban:soban,sonhom:a};
+            console.log(data);
+            res.render('thongtin-user',{data:data});
+        }
+    }   
+    
+    
+    
 });
+//cap nhat anh
+router.post('/capnhatanh',async (req,res)=>{
+    console.log(req.body.thongtin_update);
+    const file = new Buffer.from(req.body.thongtin_update.anh.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+    //lay đuôi ảnh
+    const type = req.body.thongtin_update.anh.split(';')[0].split('/')[1];
+   var id = uuid.v4()+Date.now().toString();
+    const filePath=`${id}.${type}`;
+   const params = {
+     Bucket:'detaizalo',
+     Key : filePath,
+     Body:file,
+     ACL:'public-read',
+     ContentEncoding:'base64',
+     ContentType:`image/${type}`
+   }
+   s3.upload(params,function(err,data){
+     if(err){
+      console.log(err);
+      console.log('Error uploading data: ', data); 
+    } else {
+      console.log('successfully uploaded the image!');
+    }
+   })
+   const duongdanurl = 'https://detaizalo.s3.ap-southeast-1.amazonaws.com/'
+   const entity={
+       "ma_tk":req.session.AuthUser.ma_tk,
+    "ten_tk":req.body.thongtin_update.tentk,
+    "sdt":req.body.thongtin_update.sdt,
+    "url":`${duongdanurl}${filePath}`,
+    "email":req.body.thongtin_update.email
+}
+ await dangkymodel.patch(entity);
+  res.send({data:'thanhcong'});
+}); 
 router.get('/suathongtin',async(req,res)=>{
     const soban = await table_banbe.dembanbe(req.session.AuthUser.ma_tk);
     const sonhom = await table_tk_nhom.demsonhom(req.session.AuthUser.ma_tk);
     let a=0;
-    for(let i= 0;i<sonhom.length;i++){
-        a++
-    }
-    console.log(a);
-    console.log(soban);
-    const data={soban:soban,sonhom:a};
-    console.log(data);
-    res.render('suathongtin',{data:data});
+    if(sonhom ===null ){
+        if(soban===null){
+            const mang =[];
+            const tt={
+                id_tk:req.session.AuthUser.ma_tk,
+                sobanbe:0
+            }
+            mang.push(tt);
+            const data={soban:mang,sonhom:0};
+            res.render('suathongtin',{data:data});
+        }
+        else{
+            const data={soban:soban,sonhom:0};
+            res.render('suathongtin',{data:data});
+        }
+    } 
+    else{
+        if(soban===null){
+            const mang =[];
+            for(let i= 0;i<sonhom.length;i++){
+                a++
+            }
+            const tt={
+                id_tk:req.session.AuthUser.ma_tk,
+                sobanbe:0
+            }
+            mang.push(tt);
+            const data={soban:mang,sonhom:a};
+            res.render('suathongtin',{data:data});
+        }
+        else{
+            for(let i= 0;i<sonhom.length;i++){
+                a++
+            }
+            console.log(a);
+            console.log(soban);
+           
+            const data={soban:soban,sonhom:a};
+            console.log(data);
+            res.render('suathongtin',{data:data});
+        }
+    }   
+    
 });
+ 
 router.post('/dangky',async (req,res)=>{
     const pass_hash = bcrypt.hashSync(req.body.matkhau,configg.authentication.saltRounds);
     const entity={
@@ -122,26 +232,17 @@ router.get('/chat/danhsachtinnhan/:id',async (req,res)=>{
     //const id_tinnhanUser = await table_tinnhan.single(req.session.AuthUser.ma_tk);
    // const ten_nguoi_nhan = await dangkymodel.single(req.params.id);
     const danhsachtinnhan = await table_tinnhan.timtatcatinnhan(req.session.AuthUser.ma_tk,req.params.id);
-    // const nguoigui = await table_tinnhan.timtinnhan(req.session.AuthUser.ma_tk,req.params.id);
-    // const nguoinhan = await table_tinnhan.timtinnhan(req.params.id,req.session.AuthUser.ma_tk);
-    //console.log(nguoigui);
-   // console.log(nguoinhan);
-    //    const mang_tinnhan = {
-    //        ten_nguoigui : req.session.AuthUser.ten_tk,
-    //        url_nguoigui : req.session.AuthUser.url,
-    //        nguoigui: nguoigui,
-    //        nguoinhan:nguoinhan,
-    //         ten_nguoinhan: ten_nguoi_nhan[0].ten_tk,
-    //         url_nguoinhan: ten_nguoi_nhan[0].url,
-    //    }
-      // console.log(mang_tinnhan);
-     res.send({user: danhsachtinnhan});
+    if(danhsachtinnhan.length!=null){
+        res.send({user: danhsachtinnhan});
+    }
+     
     // console.log(mang_tinnhan);
 });
 router.get('/chat/kiemtraketban',async (req,res)=>{
     const userkb = await thongbaoketban.singlebytaikhoan(req.session.AuthUser.ma_tk);
     console.log(userkb);
     //console.log(userkb.length);
+    if(userkb.length !=null){
     const mang_user = [];
     for(let i=0;i<userkb.length;i++)
     {    
@@ -153,6 +254,7 @@ router.get('/chat/kiemtraketban',async (req,res)=>{
         //var stringToJsonObject = JSON.parse(mang_user);  // convert string to json object
        // console.log(arrayToString);
      res.send({user: mang_user});
+    }
 });
 const table_banbe = require('../../models/banbe');
 router.post('/chat/kiemtraketban',async (req,res)=>{
@@ -177,6 +279,7 @@ router.post('/chat/kiemtraketban',async (req,res)=>{
 });
 router.delete('/chat/xoaketban',async (req,res)=>{
     await thongbaoketban.del(req.session.AuthUser.ma_tk);
+    res.send({data:'thanhcong'})
 })
 router.get('/chat/themban',async (req,res)=>{
   const user = await dangkymodel.all();
@@ -207,11 +310,14 @@ router.post('/chat',async (req,res)=>{
 const table_nhom = require('../../models/nhom');
 const table_tk_nhom = require('../../models/taikhoan_nhom');
 const { redirect } = require('express/lib/response');
+const nhom = require('../../models/nhom');
 router.post('/nhomchat',async (req,res)=>{
     const ds_group = req.body.ds_group;
   //  console.log(ds_group.ten_nhom);
     const entity={
-        "tennhom":ds_group.ten_nhom
+        "tennhom":ds_group.ten_nhom,
+        "urlnhom":'https://detaizalo.s3.ap-southeast-1.amazonaws.com/anhgroup.png',
+        "id_chuphong":req.session.AuthUser.ma_tk
     }
     console.log(entity);
     await table_nhom.add(entity);
@@ -244,22 +350,89 @@ router.post('/nhomchat',async (req,res)=>{
 router.get('/nhomchat',async (req,res)=>{
     const user = await table_tk_nhom.singlebytkbytennhom(req.session.AuthUser.ma_tk);
    // console.log(user);
+   if(user.length!=null){
      res.send({nhomchat: user});
+    }
   });
 router.get('/danhsachnhantingroup/:tennhom',async (req,res)=>{
     const tennhomm =await table_tk_nhom.loadalltinnhan(req.params.tennhom);  
    res.send({nhomchat: tennhomm});
-    
   });  
+
 router.get('/loadhinhanh/:tennhom',async (req,res)=>{
     const all_id = await table_tk_nhom.loadidtennhom(req.params.tennhom);
-    res.send({id:all_id})
+    const tatcatinnhan = await table_tk_nhom.demtinnhantatca(req.params.tennhom);
+    console.log(tatcatinnhan);
+    const tt={
+        id:all_id,
+        tatcatinnhan:tatcatinnhan
+    }
+    res.send({id:tt})
 });  
-//cap nhat anh
-router.post('/capnhatanh',async (req,res)=>{
-    const file = new Buffer.from(req.body.thongtin_update.anh.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+router.get('/dsbanbechuavaonhom/:tennhom',async (req,res)=>{
+    const id_banbechuathemvaonhom = await table_banbe.loaddsbanbechuavaogroup(req.session.AuthUser.ma_tk,req.params.tennhom);
+
+    var danhsachbanbechuathemnhom = [];
+    for(let i=0;i<id_banbechuathemvaonhom.length;i++){
+        const thongtinbanbe = await dangkymodel.single(id_banbechuathemvaonhom[i].id_banbe);
+        danhsachbanbechuathemnhom.push(thongtinbanbe);
+    }
+    res.send({ds_banbe:danhsachbanbechuathemnhom});
+});  
+//them ban vao group
+router.post('/thembanvaogroup',async (req,res)=>{
+    const thongtin = req.body.thongtin;
+    
+    const add_mygroup={
+        "id_tk":thongtin.id_tk[0],
+        "id_nhom":thongtin.id_nhom,
+        "thoigian":thongtin.thoigian,
+        "noidung":'Hi',
+        "loaitinnhan":'vanban',
+        "trangthai":'hoạt động'
+    }
+    console.log(add_mygroup);
+    await table_tk_nhom.add(add_mygroup);
+    res.send({data:'thanhcong'})
+  });
+ // xóa group
+ router.post('/xoagroup',async (req,res)=>{
+    const thongtin = req.body.thongtin;
+    
+    await table_nhom.del(thongtin);
+    res.send({data:'thanhcong'})
+  }); 
+//loadds de kích
+router.get('/loaddsgroup/:tennhom',async (req,res)=>{
+    const all_id = await table_tk_nhom.loadidtennhom(req.params.tennhom);
+    let ds=[]
+    
+    for(let i=0;i<all_id.length;i++){
+        if(all_id[i].id_tk!=req.session.AuthUser.ma_tk){
+            ds.push(all_id[i]);
+        }
+    }
+    res.send({id:ds})
+});
+//kich ban trong group  
+router.post('/kichban',async (req,res)=>{
+    const thongtin = req.body.thongtin;
+    await table_tk_nhom.deldel(thongtin.id_tk,thongtin.id_nhom);
+    res.send({data:'thanhcong'})
+  }); 
+ // rời group chat
+ router.post('/roigroup',async (req,res)=>{
+    const thongtin = req.body.thongtin;
+    console.log(thongtin);
+    await table_tk_nhom.deldel(req.session.AuthUser.ma_tk,thongtin);
+    res.send({data:'thanhcong'})
+  });  
+ //cap nhat anh cho group
+ router.post('/capnhatanhchogroup',async (req,res)=>{
+    console.log(req.body.thongtin_update);
+    const file = new Buffer.from(req.body.thongtin_update.urlnhom.replace(/^data:image\/\w+;base64,/, ""), 'base64');
     //lay đuôi ảnh
-    const type = req.body.thongtin_update.anh.split(';')[0].split('/')[1];
+    const type = req.body.thongtin_update.urlnhom.split(';')[0].split('/')[1];
    var id = uuid.v4()+Date.now().toString();
     const filePath=`${id}.${type}`;
    const params = {
@@ -280,13 +453,13 @@ router.post('/capnhatanh',async (req,res)=>{
    })
    const duongdanurl = 'https://detaizalo.s3.ap-southeast-1.amazonaws.com/'
    const entity={
-       "ma_tk":req.session.AuthUser.ma_tk,
-    "ten_tk":req.body.thongtin_update.tentk,
-    "sdt":req.body.thongtin_update.sdt,
-    "url":`${duongdanurl}${filePath}`,
-    "email":req.body.thongtin_update.email
-}
- await dangkymodel.patch(entity);
-     // res.redirect('/');
-});  
+    "id_nhom":req.body.thongtin_update.id_nhom,
+    "tennhom":req.body.thongtin_update.tennhom,
+    "urlnhom":`${duongdanurl}${filePath}`,
+    "id_chuphong":req.body.thongtin_update.id_chuphong
+    }
+    console.log(entity);
+    await table_nhom.patch(entity);
+    res.send({data:'thanhcong'});
+}); 
 module.exports= router;

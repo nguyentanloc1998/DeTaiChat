@@ -37,6 +37,14 @@ module.exports={
             return null;
         }
         return row;
+     },
+     loaddsbanbechuavaogroup:async function(id_tk,tennhom){
+        const row= await db.load(`select id_banbe from ${table} where id_tk=${id_tk} and NOT EXISTS (select id_tk from taikhoan_nhom inner join nhom on taikhoan_nhom.id_nhom=nhom.id_nhom where tennhom='${tennhom}' and taikhoan_nhom.id_tk=banbe.id_banbe) group by id_banbe;
+        `);
+        if(row.length===0){
+            return null;
+        }
+        return row;
      }
 
 };
