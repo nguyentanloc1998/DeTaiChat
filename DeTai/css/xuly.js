@@ -1229,8 +1229,7 @@ $(function(){
 //tao group
 $(function(){
     const form_dsGroup = document.querySelector('#form_ds_group')
-   
-    $.ajax({
+     $.ajax({
         url:'/chat/danhsachbanbe',
             contentType: 'application/json',
             success: function(res){
@@ -1241,7 +1240,7 @@ $(function(){
                     let  sdt_group = ds_user[i].map(a => a.sdt);
                     let  url = ds_user[i].map(a => a.url);
                     let  ma_tk_group = ds_user[i].map(a => a.ma_tk)
-                    const div_group = document.createElement('div');
+                    const div_group = document.createElement('div'); 
                     div_group.className='d-flex flex-stack py-4 border-bottom border-gray-300 border-bottom-dashed';
                     div_group.innerHTML=`<div class="d-flex align-items-center">
                     <!--begin::Avatar-->
@@ -1295,8 +1294,8 @@ $(function(){
 
                     }
                 }
-                
-                
+               
+                 
                 //tao thoi gian
                 const currentdate = new Date();
                 const datatime =('0'+ currentdate.getDate()).slice(-2) +"/" +('0'+(currentdate.getMonth()+1)).slice(-2)+"/"+ currentdate.getFullYear() +" "
@@ -2687,6 +2686,7 @@ $(function(){
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
           });   
         });
+
       });
 })
 //timkiemchokichbanbe
@@ -2698,5 +2698,15 @@ $(function(){
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
           });   
         });
+      });
+})
+$(function(){
+    $(document).ready(function(){
+        $("#timbanaddgroup").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#form_ds_group > div").each(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });   
+          });
       });
 })
